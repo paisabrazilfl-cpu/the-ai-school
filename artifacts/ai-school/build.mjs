@@ -149,6 +149,7 @@ img{max-width:100%}
 .navlinks{margin-left:auto;display:flex;align-items:center;gap:6px}
 .navlinks a{color:var(--mut);font-weight:600;font-size:14.5px;padding:8px 12px;border-radius:9px}
 .navlinks a:hover{color:var(--ink);background:var(--panel2);text-decoration:none}
+.navlinks a.active:not(.cta){color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,transparent)}
 .navlinks a.cta{color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 10px 24px -12px var(--acc)}
 .navlinks a.cta:hover{filter:brightness(1.06)}
 .tbtn{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--mut);cursor:pointer;display:grid;place-items:center;font-size:16px}
@@ -272,6 +273,148 @@ section.band{padding:64px 0}
 
 i[data-lucide]{width:1.05em;height:1.05em;vertical-align:-.16em;stroke-width:2.2}
 
+/* ============================================================
+   AI Engineering view layer — integrated into the school
+   Same design tokens (--acc, --panel, --line, fonts) as the rest
+   of the site. No separate nav, no separate palette.
+   ============================================================ */
+.eng-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:30px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:14px;width:fit-content;max-width:100%;box-shadow:var(--shadow)}
+.eng-tab{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;padding:9px 15px;border-radius:9px;border:0;background:transparent;color:var(--mut);cursor:pointer;transition:.15s;font-family:var(--sans)}
+.eng-tab:hover{color:var(--ink);background:var(--panel2)}
+.eng-tab.on{color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 8px 20px -10px var(--acc)}
+.eng-tab .ct{background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--mut);font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;font-variant-numeric:tabular-nums}
+.eng-tab.on .ct{background:rgba(255,255,255,.22);color:#fff}
+.eng-view{display:none;animation:engfade .3s ease}
+.eng-view.on{display:block}
+@keyframes engfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.eng-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
+.eng-controls select,.eng-controls input{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:11px;padding:9px 12px;font:14px var(--sans)}
+.eng-controls select:focus,.eng-controls input:focus{outline:none;border-color:var(--acc)}
+
+/* library — parts as expandable cards (mirrors school .cgroup) */
+.eng-part{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;transition:.2s}
+.eng-part.open{box-shadow:var(--shadow)}
+.eng-part>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:18px 22px}
+.eng-part>summary::-webkit-details-marker{display:none}
+.eng-part>summary:hover{background:var(--panel2)}
+.eng-part .pno{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:14px;color:#fff;background:linear-gradient(135deg,var(--pa,var(--acc)),var(--pb,var(--acc2)));flex-shrink:0;box-shadow:0 6px 14px -6px color-mix(in srgb,var(--pa,var(--acc)) 60%,transparent)}
+.eng-part .gh{flex:1;min-width:0}
+.eng-part .gh b{font-size:16px;letter-spacing:-.2px;display:block}
+.eng-part .gh span{font-size:13px;color:var(--mut);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eng-part .gmeta{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.eng-part .ring{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--pa,var(--acc)) calc(var(--p,0)*1%),var(--line) 0)}
+.eng-part .ring i{width:30px;height:30px;border-radius:50%;background:var(--panel);display:grid;place-items:center;font-size:10.5px;font-style:normal;font-weight:800;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.eng-part .chev{color:var(--dim);transition:.2s;display:grid;place-items:center}
+.eng-part.open .chev{transform:rotate(90deg);color:var(--acc)}
+.eng-part .chaps{padding:4px 14px 16px;display:grid;gap:2px}
+.eng-chap{display:flex;align-items:center;gap:14px;padding:11px 12px;border-radius:11px;color:var(--ink);cursor:pointer}
+.eng-chap:hover{background:var(--panel2);text-decoration:none}
+.eng-chap .cnum{font-size:12px;color:var(--dim);width:38px;flex-shrink:0;font-variant-numeric:tabular-nums;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.eng-chap .cbody{flex:1;min-width:0}
+.eng-chap .cbody b{font-weight:600;font-size:14.5px;display:block}
+.eng-chap .cbody span{font-size:12.5px;color:var(--mut);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eng-chap .cr{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--dim);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;flex-shrink:0}
+.eng-chap .cr .mini{width:36px;height:5px;border-radius:3px;background:var(--line);overflow:hidden}
+.eng-chap .cr .mini i{display:block;height:100%;background:linear-gradient(90deg,var(--good),var(--acc))}
+.eng-chap .cgo{color:var(--dim)}
+
+/* reader — chapter detail */
+.eng-reader-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:6px}
+.eng-reader-top .pill{background:var(--panel);border:1px solid var(--line);color:var(--mut);font-size:11.5px;font-weight:600;letter-spacing:.4px;padding:4px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:5px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.eng-reader h2{font-family:var(--serif);font-size:clamp(24px,4.4vw,34px);letter-spacing:-.7px;line-height:1.1;margin:8px 0 10px}
+.eng-reader .blurb{color:var(--mut);font-size:16.5px;max-width:65ch;margin:0 0 18px}
+.eng-lesson{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--la,var(--acc));border-radius:14px;margin-bottom:12px;overflow:hidden}
+.eng-lesson.learned{border-left-color:var(--good)}
+.eng-lhead{display:flex;gap:12px;align-items:center;padding:14px 18px;cursor:pointer;user-select:none}
+.eng-lhead:hover{background:var(--panel2)}
+.eng-ltoggle{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--line);display:grid;place-items:center;flex-shrink:0;color:transparent;background:var(--panel);transition:.15s;cursor:pointer}
+.eng-lesson.learned .eng-ltoggle{background:linear-gradient(135deg,var(--good),var(--acc));border-color:transparent;color:#fff}
+.eng-ltitle{flex:1;font-size:15px;font-weight:600;line-height:1.4}
+.eng-lchev{color:var(--dim);flex-shrink:0;display:grid;transition:.2s}
+.eng-lesson.open .eng-lchev{transform:rotate(180deg);color:var(--acc)}
+.eng-lbody{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.eng-lesson.open .eng-lbody{max-height:500px}
+.eng-lbin{padding:0 18px 16px 54px;color:var(--ink);font-size:15px;line-height:1.65}
+.eng-tag{display:inline-block;margin-top:10px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,transparent);border:1px solid color-mix(in srgb,var(--acc) 25%,transparent);border-radius:7px;padding:3px 9px}
+.eng-rnav{display:flex;gap:10px;align-items:center;margin-top:22px;flex-wrap:wrap}
+.eng-rnav .sp{flex:1}
+.eng-notebox{background:var(--panel2);border:1px dashed var(--line);border-radius:14px;padding:14px 16px;margin:18px 0}
+.eng-notebox label{font-size:12px;color:var(--mut);font-weight:600;display:flex;align-items:center;gap:7px}
+.eng-notebox textarea{width:100%;margin-top:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:11px;font:14px/1.55 var(--sans);resize:vertical;min-height:90px}
+.eng-notebox textarea:focus{outline:none;border-color:var(--acc)}
+
+/* flashcards */
+.eng-card-wrap{perspective:1600px;max-width:580px;margin:0 auto}
+.eng-flip{position:relative;width:100%;min-height:240px;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;cursor:pointer}
+.eng-flip.f{transform:rotateY(180deg)}
+.eng-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);padding:32px;display:flex;flex-direction:column;justify-content:center;background:var(--panel);box-shadow:var(--shadow)}
+.eng-face.back{transform:rotateY(180deg);background:var(--panel2)}
+.eng-face .lab{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.eng-face .term{font-family:var(--serif);font-size:28px;font-weight:700;letter-spacing:-.4px;color:var(--ink)}
+.eng-face .def{font-size:16.5px;color:var(--ink);line-height:1.55}
+.eng-cardbar{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.eng-cprog{text-align:center;color:var(--mut);font-size:12.5px;margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* quiz */
+.eng-q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.eng-q .qn{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:var(--acc);letter-spacing:.7px;font-weight:700}
+.eng-q .qt{font-size:16.5px;font-weight:600;margin:8px 0 14px;color:var(--ink)}
+.eng-opt{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:11px;padding:12px 14px;margin-bottom:8px;font-size:14.5px;font-family:var(--sans);transition:.15s;cursor:pointer}
+.eng-opt:hover{border-color:var(--acc)}
+.eng-opt.sel{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,transparent)}
+.eng-opt.correct{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,transparent)}
+.eng-opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.eng-expl{font-size:13.5px;color:var(--mut);margin-top:10px;padding:10px 12px;background:var(--panel2);border-radius:9px;border-left:2px solid var(--acc2)}
+.eng-score{font-family:var(--serif);font-size:64px;font-weight:700;letter-spacing:-2px;line-height:1}
+.eng-bar-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.eng-bar-row .bn{flex:1}
+.eng-bar-row .bv{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mut);min-width:50px;text-align:right}
+.eng-bar{height:7px;background:var(--line);border-radius:5px;overflow:hidden;width:130px;flex-shrink:0}
+.eng-bar i{display:block;height:100%;border-radius:5px}
+
+/* notes */
+.eng-note{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.eng-note .nh{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.eng-note .nh b{font-size:14.5px;color:var(--ink)}
+.eng-note .nh .src{font-size:11px;color:var(--dim);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.eng-note .nb{color:var(--ink);font-size:14px;white-space:pre-wrap;line-height:1.55}
+
+/* arena */
+.eng-arena-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.eng-arena-cat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.eng-arena-cat:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--ca,var(--acc)),transparent)}
+.eng-arena-cat h4{margin:0 0 4px;font-size:15.5px;display:flex;align-items:center;gap:9px;color:var(--ink)}
+.eng-arena-cat .cd{font-size:12.5px;color:var(--mut);margin:0 0 12px}
+.eng-arena-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;border:1px solid transparent;margin:0 -6px;transition:.15s;color:var(--ink)}
+.eng-arena-link:hover{background:var(--panel2);border-color:var(--line);text-decoration:none}
+.eng-arena-link .sdot{width:8px;height:8px;border-radius:50%;background:var(--ca,var(--acc));flex-shrink:0}
+.eng-arena-link .body{min-width:0;flex:1}
+.eng-arena-link b{font-size:13.5px;font-weight:600;display:block}
+.eng-arena-link small{font-size:11px;color:var(--dim);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.eng-arena-link .ext{margin-left:auto;color:var(--dim);flex-shrink:0}
+
+/* progress dashboard */
+.eng-dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.eng-dash-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.eng-dash-card .dv{font-family:var(--serif);font-size:38px;font-weight:700;letter-spacing:-1.5px;line-height:1;color:var(--ink)}
+.eng-dash-card .dl{color:var(--mut);font-size:13px;margin-top:8px}
+.eng-prow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.eng-prow .pno{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;background:linear-gradient(135deg,var(--pa,var(--acc)),var(--pb,var(--acc2)))}
+.eng-prow .pname{flex:1;font-size:14.5px;color:var(--ink)}
+.eng-prow .pct{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:var(--mut);min-width:48px;text-align:right}
+
+.eng-empty{text-align:center;color:var(--dim);padding:48px 20px;font-size:14px}
+.eng-stats{display:flex;flex-wrap:wrap;gap:24px;margin:30px 0 0;padding-top:24px;border-top:1px solid var(--line)}
+.eng-stats .s b{font-family:var(--serif);font-size:28px;letter-spacing:-1px;display:block;line-height:1;color:var(--ink)}
+.eng-stats .s span{font-size:13px;color:var(--mut)}
+
+@media(max-width:640px){
+  .eng-tabs{width:100%;overflow-x:auto;flex-wrap:nowrap}
+  .eng-tab{flex-shrink:0}
+  .eng-tab .ct{display:none}
+}
+
 @media(max-width:860px){
   .programs,.features{grid-template-columns:1fr}
   .reader{grid-template-columns:1fr;gap:18px}
@@ -289,19 +432,21 @@ i[data-lucide]{width:1.05em;height:1.05em;vertical-align:-.16em;stroke-width:2.2
 const ICON = (n) => `<i data-lucide="${n}"></i>`;
 
 function navBar(active = "") {
-  const link = (href, label, cls = "") =>
-    `<a href="${href}"${cls ? ` class="${cls}"` : ""}>${label}</a>`;
+  const link = (href, label, key = "", extra = "") => {
+    const cls = [extra, key && key === active ? "active" : ""].filter(Boolean).join(" ");
+    return `<a href="${href}"${cls ? ` class="${cls}"` : ""}>${label}</a>`;
+  };
   return `<header class="nav"><div class="wrap">
     <a class="brand" href="${u("/")}">
       <span class="mark">AI</span>
       <span>The AI School<small>Learn it. Build it.</small></span>
     </a>
     <nav class="navlinks">
-      ${link(u("/#programs"), "Programs")}
-      ${link(u("/#practical"), "Practical AI")}
-      ${link(u("/ai-engineering/"), "AI Engineering")}
-      ${link(u("/#about"), "About")}
-      ${link(u("/ai-engineering/"), "Enter a course →", "cta")}
+      ${link(u("/#programs"), "Programs", "programs")}
+      ${link(u("/#practical"), "Practical AI", "practical")}
+      ${link(u("/ai-engineering/"), "AI Engineering", "engineering")}
+      ${link(u("/#about"), "About", "about")}
+      ${link(u("/ai-engineering/"), "Enter a course →", "", "cta")}
       <button class="tbtn icononly" id="themeBtn" title="Toggle theme" aria-label="Toggle light/dark">${ICON("moon")}</button>
     </nav>
   </div></header>`;
@@ -627,139 +772,367 @@ function render404() {
 /* --------------------------- AI Engineering app -------------------------- */
 
 function buildEngineering() {
-  let app = readFileSync(join(__dirname, "ai-engineering.html"), "utf8");
+  // Pull only the DATA (PARTS, CARDS, QUIZ, ARENA) out of the canonical
+  // single-file engineering app. The chrome, styling, gate, and SPA
+  // are rewritten from scratch here so AI Engineering is a first-class
+  // part of the school — same nav, same footer, same design tokens.
+  const raw = readFileSync(join(__dirname, "ai-engineering.html"), "utf8");
+  const dStart = raw.indexOf("const PARTS=[");
+  const dEnd = raw.indexOf("\nlet USER=");
+  if (dStart < 0 || dEnd < 0) throw new Error("could not extract data arrays from ai-engineering.html");
+  const dataJs = raw.slice(dStart, dEnd);
 
-  // School-aligned skin: align both themes to the school palette, and — crucially
-  // — make LIGHT mode genuinely light by overriding the dark-mode neon glows,
-  // heavy box-shadows, and dark gradients that the original neon design baked in.
-  // The override is wrapped in a body-scoped selector to win against the
-  // original app's inline <style>, regardless of cascade order.
-  const skin = `<style id="school-skin">
-:root{
-  --bg:#0b1020;--bg2:#0f152b;--card:#141b34;--card2:#1b2444;--line:#28324f;
-  --ink:#eef2ff;--mut:#a4b1d0;--dim:#6b7799;
-  --acc:#7c83ff;--acc2:#38bdf8;--acc3:#a78bfa;--good:#34d399;--warn:#fbbf24;--bad:#f87171;
-  --glow:0 0 10px;
+  const tabs = [
+    ["library", "Library", "layout-grid"],
+    ["cards", "Flashcards", "layers"],
+    ["quiz", "Quiz", "clipboard-check"],
+    ["notes", "Notes", "notebook-pen"],
+    ["arena", "Arena", "newspaper"],
+    ["dash", "Progress", "trophy"],
+  ];
+
+  const hero = `<section class="hero"><div class="wrap">
+    <span class="eyebrow">${ICON("cpu")} AI Engineering Track · 7 parts · ${ENG_CHAPTERS} chapters</span>
+    <h1>AI Engineering, <span class="hl">end&#8209;to&#8209;end</span></h1>
+    <p class="lede">The whole stack, the honest way: foundations → how models work → the application layer → agent harnesses → modalities → systems &amp; MLOps → the research frontier. Interactive lessons, flashcards, quizzes — everything stored locally on your device.</p>
+    <div class="eng-tabs" id="eng-tabs" role="tablist">
+      ${tabs.map((t, i) => `<button class="eng-tab${i === 0 ? " on" : ""}" data-tab="${t[0]}" role="tab">${ICON(t[2])} ${t[1]} <span class="ct" id="ct-${t[0]}"></span></button>`).join("")}
+    </div>
+  </div></section>`;
+
+  const views = tabs.map((t) => `<section class="eng-view${t[0] === "library" ? " on" : ""}" id="v-${t[0]}"></section>`).join("\n      ");
+  const main = `<main class="wrap" style="padding:34px 22px 70px">${views}</main>`;
+
+  // SPA logic — works directly against school CSS classes.
+  const spa = `<script>
+${dataJs}
+
+(function(){
+  const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+  function icons(){try{if(window.lucide&&lucide.createIcons)lucide.createIcons()}catch(e){}}
+
+  // ---- state (localStorage, namespaced) ----
+  const KEY="school_eng_v1";
+  let STATE={learned:{},known:{},notes:{},scores:[]};
+  const mem={};
+  const lg=k=>{try{return localStorage.getItem(k)}catch(e){return k in mem?mem[k]:null}};
+  const ls=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){mem[k]=v}};
+  function load(){try{STATE=Object.assign(STATE,JSON.parse(lg(KEY)||"{}"))}catch(e){}STATE.learned=STATE.learned||{};STATE.known=STATE.known||{};STATE.notes=STATE.notes||{};STATE.scores=STATE.scores||[]}
+  const save=()=>ls(KEY,JSON.stringify(STATE));
+  load();
+
+  // ---- index chapters ----
+  const CH=[];
+  PARTS.forEach((p,pi)=>p.ch.forEach((c,ci)=>CH.push({gid:CH.length+1,pid:p.id,part:p,pi,ci,id:p.id+":"+ci,title:c[0],blurb:c[1],ideas:c[2]})));
+  const chById=id=>CH.find(c=>c.id===id);
+  const partChaps=pid=>CH.filter(c=>c.pid===pid);
+  const lk=(cid,i)=>cid+"#"+i;
+  const chLearned=c=>c.ideas.reduce((n,_,i)=>n+(STATE.learned[lk(c.id,i)]?1:0),0);
+  const chDone=c=>chLearned(c)===c.ideas.length;
+  const partPct=pid=>{const cs=partChaps(pid),d=cs.filter(chDone).length;return{d,t:cs.length,p:Math.round(100*d/cs.length)}};
+
+  // ---- tab nav (hash-routed) ----
+  const tabBtns=Array.from(document.querySelectorAll("#eng-tabs .eng-tab"));
+  const views={};${tabs.map((t) => `views["${t[0]}"]=document.getElementById("v-${t[0]}");`).join("")}
+  function go(tab,arg){
+    if(!views[tab])tab="library";
+    tabBtns.forEach(b=>b.classList.toggle("on",b.dataset.tab===tab));
+    Object.keys(views).forEach(k=>views[k].classList.toggle("on",k===tab));
+    location.hash=arg?(tab+"/"+encodeURIComponent(arg)):tab;
+    ({library:rLib,reader:()=>rRead(arg),cards:rCards,quiz:rQuiz,notes:rNotes,arena:rArena,dash:rDash}[tab]||rLib)();
+    window.scrollTo({top:0,behavior:"smooth"});icons();updateCounts();
+  }
+  tabBtns.forEach(b=>b.addEventListener("click",()=>go(b.dataset.tab)));
+  function updateCounts(){
+    const done=CH.filter(chDone).length;
+    const set=(id,v)=>{const el=document.getElementById("ct-"+id);if(el)el.textContent=v};
+    set("library", done+"/"+CH.length);
+    set("cards", Object.keys(STATE.known).filter(k=>STATE.known[k]).length+"/"+CARDS.length);
+    set("notes", Object.keys(STATE.notes).filter(k=>STATE.notes[k]&&STATE.notes[k].trim&&STATE.notes[k].trim()).length);
+    set("dash", Math.round(100*done/CH.length)+"%");
+  }
+
+  // ---- LIBRARY ----
+  function rLib(){
+    const done=CH.filter(chDone).length,lessons=CH.reduce((n,c)=>n+chLearned(c),0),total=CH.reduce((n,c)=>n+c.ideas.length,0);
+    let h=\`<div class="eng-stats">
+      <div class="s"><b>\${done}/\${CH.length}</b><span>chapters mastered</span></div>
+      <div class="s"><b>\${lessons}/\${total}</b><span>lessons learned</span></div>
+      <div class="s"><b>\${CARDS.length}</b><span>flashcards</span></div>
+      <div class="s"><b>\${QUIZ.length}</b><span>quiz items</span></div>
+    </div>
+    <p style="color:var(--mut);font-size:14px;margin:18px 0 22px"><i data-lucide="hand-pointer"></i> Tap a part to expand it · open any chapter to read &amp; mark lessons learned.</p>\`;
+    PARTS.forEach((p,pi)=>{
+      const pr=partPct(p.id);
+      h+=\`<details class="eng-part" id="ep-\${p.id}" style="--pa:\${p.a};--pb:\${p.b}"\${pi===0?" open":""}>
+        <summary>
+          <div class="pno">\${pi+1}</div>
+          <div class="gh"><b>\${esc(p.t)}</b><span>\${esc(p.s)}</span></div>
+          <div class="gmeta">
+            <span class="pill">\${p.ch.length} ch</span>
+            <div class="ring" style="--p:\${pr.p}"><i>\${pr.p}%</i></div>
+            <span class="chev"><i data-lucide="chevron-right"></i></span>
+          </div>
+        </summary>
+        <div class="chaps">\`;
+      partChaps(p.id).forEach(c=>{
+        const lc=chLearned(c),lt=c.ideas.length;
+        h+=\`<a class="eng-chap" data-cid="\${c.id}" href="#reader/\${encodeURIComponent(c.id)}">
+          <span class="cnum">CH \${c.gid}</span>
+          <span class="cbody"><b>\${esc(c.title)}</b><span>\${esc(c.blurb)}</span></span>
+          <span class="cr">\${chDone(c)?'<i data-lucide="check-check" style="color:var(--good)"></i>':'<div class="mini"><i style="width:'+Math.round(100*lc/lt)+'%"></i></div>'+lc+'/'+lt}</span>
+          <span class="cgo"><i data-lucide="chevron-right"></i></span>
+        </a>\`;
+      });
+      h+=\`</div></details>\`;
+    });
+    views.library.innerHTML=h;
+    views.library.querySelectorAll(".eng-chap").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();go("reader",a.dataset.cid)}));
+    icons();
+  }
+
+  // ---- READER ----
+  function rRead(id){
+    const c=id?chById(id):CH[0];if(!c){go("library");return}
+    const i=CH.indexOf(c),prev=CH[i-1],next=CH[i+1];
+    let h=\`<div class="eng-reader" style="--la:\${c.part.a}">
+      <div class="eng-reader-top">
+        <span class="pill">\${esc(c.part.t)} · CH \${c.gid} of \${CH.length}</span>
+        <span class="pill" style="border-color:\${c.part.a};color:\${c.part.a}">Part \${c.pi+1}</span>
+        <span class="pill" id="cdone">\${chLearned(c)}/\${c.ideas.length} learned</span>
+      </div>
+      <h2>\${esc(c.title)}</h2>
+      <p class="blurb">\${esc(c.blurb)}</p>\`;
+    c.ideas.forEach((t,idx)=>{
+      const on=!!STATE.learned[lk(c.id,idx)];
+      h+=\`<div class="eng-lesson\${on?" learned":""}" id="les-\${idx}">
+        <div class="eng-lhead" data-i="\${idx}">
+          <button class="eng-ltoggle" data-toggle="\${idx}" aria-label="Mark learned"><i data-lucide="check"></i></button>
+          <div class="eng-ltitle">\${esc(t[0])}</div>
+          <span class="eng-lchev"><i data-lucide="chevron-down"></i></span>
+        </div>
+        <div class="eng-lbody"><div class="eng-lbin">\${esc(t[1])}\${t[2]?'<br><span class="eng-tag">'+esc(t[2])+'</span>':""}</div></div>
+      </div>\`;
+    });
+    h+=\`<div class="eng-notebox"><label><i data-lucide="pencil"></i> Chapter notes</label>
+        <textarea id="cnote" placeholder="Notes for this chapter — saved automatically.">\${esc(STATE.notes[c.id]||"")}</textarea></div>
+      <div class="eng-rnav">
+        <button class="btn" data-go="library"><i data-lucide="arrow-left"></i> Library</button>
+        <button class="btn" data-cardpart="\${c.pid}"><i data-lucide="layers"></i> Cards for this part</button>
+        <button class="btn" data-quizpart="\${c.pid}"><i data-lucide="clipboard-check"></i> Quiz this part</button>
+        <div class="sp"></div>
+        <button class="btn primary" data-markall="\${c.id}"><i data-lucide="check-check"></i> Mark all learned</button>
+      </div>
+      <div class="eng-rnav">
+        \${prev?'<button class="btn" data-go-reader="'+prev.id+'"><i data-lucide="arrow-left"></i> CH '+prev.gid+'</button>':'<span></span>'}
+        <div class="sp"></div>
+        \${next?'<button class="btn" data-go-reader="'+next.id+'">CH '+next.gid+' <i data-lucide="arrow-right"></i></button>':''}
+      </div>
+    </div>\`;
+    views.reader.innerHTML=h;
+    const firstOpen=c.ideas.findIndex((_,idx)=>!STATE.learned[lk(c.id,idx)]);
+    const openIdx=firstOpen<0?0:firstOpen;
+    const fEl=document.getElementById("les-"+openIdx); if(fEl)fEl.classList.add("open");
+    // wire lesson toggles
+    views.reader.querySelectorAll(".eng-lhead").forEach(el=>el.addEventListener("click",e=>{
+      if(e.target.closest("[data-toggle]"))return;
+      const idx=+el.dataset.i;document.getElementById("les-"+idx).classList.toggle("open");icons();
+    }));
+    views.reader.querySelectorAll("[data-toggle]").forEach(b=>b.addEventListener("click",e=>{
+      e.stopPropagation();const idx=+b.dataset.toggle;const key=lk(c.id,idx);
+      if(STATE.learned[key])delete STATE.learned[key];else STATE.learned[key]=true;save();
+      document.getElementById("les-"+idx).classList.toggle("learned",!!STATE.learned[key]);
+      const cd=document.getElementById("cdone");if(cd)cd.textContent=chLearned(c)+"/"+c.ideas.length+" learned";
+      updateCounts();icons();
+    }));
+    views.reader.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
+    views.reader.querySelectorAll("[data-go-reader]").forEach(b=>b.addEventListener("click",()=>go("reader",b.dataset.goReader)));
+    views.reader.querySelectorAll("[data-cardpart]").forEach(b=>b.addEventListener("click",()=>{go("cards");document.getElementById("cPart").value=b.dataset.cardpart;rebuildCards()}));
+    views.reader.querySelectorAll("[data-quizpart]").forEach(b=>b.addEventListener("click",()=>{go("quiz");document.getElementById("qScope").value=b.dataset.quizpart;startQuiz()}));
+    views.reader.querySelector("[data-markall]").addEventListener("click",()=>{
+      const all=c.ideas.every((_,i)=>STATE.learned[lk(c.id,i)]);
+      c.ideas.forEach((_,i)=>{const key=lk(c.id,i);if(all)delete STATE.learned[key];else STATE.learned[key]=true});
+      save();rRead(c.id);updateCounts();
+    });
+    document.getElementById("cnote").addEventListener("input",e=>{STATE.notes[c.id]=e.target.value;save();updateCounts()});
+    icons();
+  }
+
+  // ---- FLASHCARDS ----
+  let CSET=[],CI=0;
+  function rCards(){
+    views.cards.innerHTML=\`<div class="eng-controls">
+      <select id="cPart"><option value="*">All parts</option>\${PARTS.map((p,i)=>'<option value="'+p.id+'">Part '+(i+1)+' · '+esc(p.t)+'</option>').join("")}</select>
+      <select id="cFilt"><option value="all">All cards</option><option value="unknown">Only unknown</option></select>
+      <button class="btn" id="shufBtn"><i data-lucide="shuffle"></i> Shuffle</button>
+    </div><div id="cArea"></div>\`;
+    document.getElementById("cPart").addEventListener("change",rebuildCards);
+    document.getElementById("cFilt").addEventListener("change",rebuildCards);
+    document.getElementById("shufBtn").addEventListener("click",()=>{CSET=shuffle(CSET);CI=0;drawCard()});
+    rebuildCards();icons();
+  }
+  function rebuildCards(){
+    const p=document.getElementById("cPart").value,f=document.getElementById("cFilt").value;
+    let s=CARDS.map((c,i)=>({term:c[0],def:c[1],pid:c[2],key:"c"+i})).filter(c=>p==="*"||c.pid===p);
+    if(f==="unknown")s=s.filter(c=>!STATE.known[c.key]);CSET=s;CI=0;drawCard();
+  }
+  function drawCard(){
+    const a=document.getElementById("cArea");if(!a)return;
+    if(!CSET.length){a.innerHTML='<div class="eng-empty">No cards match this filter.</div>';return}
+    const c=CSET[CI],k=!!STATE.known[c.key],pt=PARTS.find(p=>p.id===c.pid);
+    a.innerHTML=\`<div class="eng-card-wrap"><div class="eng-flip" id="flip">
+        <div class="eng-face front"><div class="lab">Term · \${esc(pt.t)}</div><div class="term">\${esc(c.term)}</div><div class="lab" style="margin-top:18px">tap to flip</div></div>
+        <div class="eng-face back"><div class="lab">Definition</div><div class="def">\${esc(c.def)}</div></div>
+      </div></div>
+      <div class="eng-cardbar">
+        <button class="btn" id="prevC"><i data-lucide="arrow-left"></i></button>
+        <button class="btn \${k?"":"primary"}" id="knC">\${k?'<i data-lucide="check"></i> Known':"Mark known"}</button>
+        <button class="btn" id="nextC"><i data-lucide="arrow-right"></i></button>
+      </div>
+      <div class="eng-cprog">\${CI+1} / \${CSET.length} · \${CSET.filter(x=>STATE.known[x.key]).length} known</div>\`;
+    document.getElementById("flip").addEventListener("click",function(){this.classList.toggle("f")});
+    document.getElementById("prevC").addEventListener("click",()=>{CI=(CI-1+CSET.length)%CSET.length;drawCard()});
+    document.getElementById("nextC").addEventListener("click",()=>{CI=(CI+1)%CSET.length;drawCard()});
+    document.getElementById("knC").addEventListener("click",()=>{if(STATE.known[c.key])delete STATE.known[c.key];else STATE.known[c.key]=true;save();setTimeout(()=>{CI=(CI+1)%CSET.length;drawCard();updateCounts()},150)});
+    icons();
+  }
+
+  // ---- QUIZ ----
+  let EXAM=null;
+  function rQuiz(){
+    if(EXAM){drawExam();return}
+    const last=STATE.scores.slice(-3).reverse();
+    views.quiz.innerHTML=\`<div class="eng-controls">
+        <select id="qScope"><option value="*">All parts</option>\${PARTS.map((p,i)=>'<option value="'+p.id+'">Part '+(i+1)+' · '+esc(p.t)+'</option>').join("")}</select>
+        <button class="btn primary" id="qStart"><i data-lucide="play"></i> Start</button>
+      </div>
+      <p style="color:var(--mut);font-size:14px;margin:0 0 18px">Multiple-choice, pass line 75%. Option order is shuffled each attempt.</p>
+      \${last.length?'<h4 style="margin:22px 0 8px;color:var(--ink);font-size:14px">Recent</h4>'+last.map(s=>'<div class="eng-bar-row"><div class="bn">'+esc(s.label)+'</div><div class="eng-bar"><i style="width:'+s.pct+'%;background:'+(s.pct>=75?'var(--good)':'var(--warn)')+'"></i></div><div class="bv" style="color:'+(s.pct>=75?'var(--good)':'var(--warn)')+'">'+s.pct+'%</div></div>').join(""):''}\`;
+    document.getElementById("qStart").addEventListener("click",startQuiz);icons();
+  }
+  function startQuiz(){
+    const sc=document.getElementById("qScope").value;
+    let pool=QUIZ.map(q=>({pid:q[0],q:q[1],opts:q[2],ans:q[3],expl:q[4]})).filter(q=>sc==="*"||q.pid===sc);
+    pool=shuffle(pool).slice(0,sc==="*"?Math.min(15,pool.length):pool.length);
+    pool=pool.map(it=>{const order=shuffle(it.opts.map((_,i)=>i));return Object.assign({},it,{opts:order.map(i=>it.opts[i]),ans:order.indexOf(it.ans)})});
+    const label=sc==="*"?"All parts":("Part "+(PARTS.findIndex(p=>p.id===sc)+1)+" · "+PARTS.find(p=>p.id===sc).t);
+    EXAM={label,items:pool,ans:Array(pool.length).fill(null),done:false};drawExam();
+  }
+  function drawExam(){
+    if(EXAM.done){drawResults();return}
+    let h="";
+    EXAM.items.forEach((it,i)=>{const pt=PARTS.find(p=>p.id===it.pid);
+      h+=\`<div class="eng-q"><div class="qn">Q\${i+1} · \${esc(pt.t)}</div><div class="qt">\${esc(it.q)}</div>\`;
+      it.opts.forEach((o,oi)=>h+='<button class="eng-opt'+(EXAM.ans[i]===oi?' sel':'')+'" data-q="'+i+'" data-o="'+oi+'">'+esc(o)+'</button>');
+      h+="</div>";
+    });
+    const ansd=EXAM.ans.filter(a=>a!==null).length;
+    h+=\`<div class="eng-rnav"><button class="btn" id="qCancel">Cancel</button><div class="sp"></div><span class="pill">\${ansd}/\${EXAM.items.length}</span><button class="btn primary" id="qSubmit">Submit</button></div>\`;
+    views.quiz.innerHTML='<h3 style="font-family:var(--serif);font-size:22px;margin:0 0 16px;color:var(--ink)">'+esc(EXAM.label)+'</h3>'+h;
+    views.quiz.querySelectorAll(".eng-opt").forEach(b=>b.addEventListener("click",()=>{
+      const qi=+b.dataset.q,oi=+b.dataset.o;EXAM.ans[qi]=oi;
+      views.quiz.querySelectorAll('.eng-opt[data-q="'+qi+'"]').forEach((o,k)=>o.classList.toggle("sel",k===oi));
+      const a=EXAM.ans.filter(x=>x!==null).length;views.quiz.querySelector(".pill").textContent=a+"/"+EXAM.items.length;
+    }));
+    document.getElementById("qCancel").addEventListener("click",()=>{EXAM=null;rQuiz()});
+    document.getElementById("qSubmit").addEventListener("click",grade);
+  }
+  function grade(){
+    if(EXAM.ans.includes(null)&&!confirm("Some questions are unanswered — submit anyway?"))return;
+    let c=0;const byp={};
+    EXAM.items.forEach((it,i)=>{const ok=EXAM.ans[i]===it.ans;if(ok)c++;const ptn=PARTS.find(p=>p.id===it.pid).t;(byp[ptn]=byp[ptn]||{c:0,t:0}).t++;if(ok)byp[ptn].c++});
+    const pct=Math.round(100*c/EXAM.items.length);
+    EXAM.done=true;EXAM.c=c;EXAM.pct=pct;EXAM.byp=byp;
+    STATE.scores.push({label:EXAM.label,pct,at:Date.now()});save();drawResults();
+  }
+  function drawResults(){
+    const pass=EXAM.pct>=75;
+    let h='<div style="display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-bottom:22px"><div class="eng-score" style="color:'+(pass?"var(--good)":"var(--warn)")+'">'+EXAM.pct+'%</div><div><div style="font-size:18px;font-weight:800;color:'+(pass?"var(--good)":"var(--warn)")+'">'+(pass?"Passed":"Keep going")+'</div><div style="color:var(--mut);font-size:14px">'+EXAM.c+' / '+EXAM.items.length+' correct · pass 75%</div></div></div>';
+    h+='<h4 style="margin:8px 0;color:var(--ink);font-size:14px">By part</h4>';
+    Object.keys(EXAM.byp).forEach(k=>{const b=EXAM.byp[k],p=Math.round(100*b.c/b.t);
+      h+='<div class="eng-bar-row"><div class="bn">'+esc(k)+'</div><div class="eng-bar"><i style="width:'+p+'%;background:'+(p>=75?"var(--good)":p>=50?"var(--warn)":"var(--bad)")+'"></i></div><div class="bv">'+b.c+'/'+b.t+'</div></div>'});
+    h+='<h4 style="margin:24px 0 8px;color:var(--ink);font-size:14px">Review</h4>';
+    EXAM.items.forEach((it,i)=>{const ua=EXAM.ans[i];
+      h+='<div class="eng-q"><div class="qn">Q'+(i+1)+'</div><div class="qt">'+esc(it.q)+'</div>';
+      it.opts.forEach((o,oi)=>{let cl="eng-opt";if(oi===it.ans)cl+=" correct";else if(oi===ua)cl+=" wrong";h+='<div class="'+cl+'">'+esc(o)+'</div>'});
+      h+='<div class="eng-expl"><b>'+(ua===it.ans?"Correct. ":"Answer: ")+'</b>'+esc(it.expl)+'</div></div>'});
+    h+='<div class="eng-rnav"><button class="btn primary" id="qDone">Done</button><button class="btn" id="qRetake">Retake</button></div>';
+    views.quiz.innerHTML='<h3 style="font-family:var(--serif);font-size:22px;margin:0 0 18px;color:var(--ink)">'+esc(EXAM.label)+'</h3>'+h;
+    document.getElementById("qDone").addEventListener("click",()=>{EXAM=null;rQuiz()});
+    document.getElementById("qRetake").addEventListener("click",startQuiz);icons();
+  }
+
+  // ---- NOTES ----
+  function rNotes(){
+    const notes=CH.filter(c=>STATE.notes[c.id]&&STATE.notes[c.id].trim());
+    let h=\`<div class="eng-controls">
+      <input id="nsearch" placeholder="Search notes…" style="min-width:240px;flex:1">
+      <button class="btn" id="nexport"><i data-lucide="download"></i> Export .md</button>
+    </div>
+    <div class="eng-notebox"><label><i data-lucide="sparkles"></i> Global scratchpad</label>
+      <textarea id="scratch" style="min-height:120px" placeholder="Cross-cutting thoughts, questions, TODOs…">\${esc(STATE.notes._s||"")}</textarea>
+    </div>
+    <div id="nlist">\${notes.length?"":'<div class="eng-empty">No chapter notes yet — open any chapter and start writing.</div>'}</div>\`;
+    views.notes.innerHTML=h;
+    const list=document.getElementById("nlist");
+    notes.forEach(c=>{const card=document.createElement("div");card.className="eng-note";card.dataset.x=(c.title+" "+STATE.notes[c.id]).toLowerCase();
+      card.innerHTML='<div class="nh"><b>'+esc(c.title)+'</b><span class="src">'+esc(c.part.t)+' · CH '+c.gid+'</span><button class="btn" style="margin-left:auto" data-r="'+c.id+'">Open</button></div><div class="nb">'+esc(STATE.notes[c.id])+'</div>';
+      list.appendChild(card);card.querySelector("[data-r]").addEventListener("click",()=>go("reader",c.id))});
+    document.getElementById("nsearch").addEventListener("input",e=>{const q=e.target.value.toLowerCase();list.querySelectorAll(".eng-note").forEach(n=>n.style.display=n.dataset.x.includes(q)?"":"none")});
+    document.getElementById("scratch").addEventListener("input",e=>{STATE.notes._s=e.target.value;save();updateCounts()});
+    document.getElementById("nexport").addEventListener("click",()=>{let md="# AI Engineering — Notes\\n\\n_"+new Date().toLocaleString()+"_\\n\\n";if(STATE.notes._s&&STATE.notes._s.trim())md+="## Scratchpad\\n\\n"+STATE.notes._s+"\\n\\n";CH.forEach(c=>{if(STATE.notes[c.id]&&STATE.notes[c.id].trim())md+="## "+c.part.t+" — CH "+c.gid+": "+c.title+"\\n\\n"+STATE.notes[c.id]+"\\n\\n"});const b=new Blob([md],{type:"text/markdown"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="ai-engineering-notes.md";a.click()});
+    icons();
+  }
+
+  // ---- ARENA ----
+  function rArena(){
+    let h='<p style="color:var(--mut);font-size:14.5px;margin:0 0 22px">Curated tier-1 AI sources — labs, research, leaderboards, analysts. External links open in new tabs.</p><div class="eng-arena-grid">';
+    ARENA.forEach(c=>{h+='<div class="eng-arena-cat" style="--ca:'+c.color+'"><h4><span style="width:11px;height:11px;border-radius:50%;background:'+c.color+';display:inline-block"></span>'+esc(c.cat)+'</h4><p class="cd">'+esc(c.desc)+'</p>';
+      c.links.forEach(l=>h+='<a class="eng-arena-link" href="'+l[2]+'" target="_blank" rel="noopener noreferrer"><span class="sdot"></span><div class="body"><b>'+esc(l[0])+'</b><small>'+esc(l[1])+'</small></div><span class="ext"><i data-lucide="external-link"></i></span></a>');
+      h+='</div>'});
+    h+='</div>';
+    views.arena.innerHTML=h;icons();
+  }
+
+  // ---- DASHBOARD ----
+  function rDash(){
+    const done=CH.filter(chDone).length,pct=Math.round(100*done/CH.length);
+    const lessons=CH.reduce((n,c)=>n+chLearned(c),0),total=CH.reduce((n,c)=>n+c.ideas.length,0);
+    const known=Object.keys(STATE.known).filter(k=>STATE.known[k]).length;
+    const avg=STATE.scores.length?Math.round(STATE.scores.reduce((a,s)=>a+s.pct,0)/STATE.scores.length):0;
+    let h=\`<div class="eng-dash-grid">
+        <div class="eng-dash-card"><div class="dv">\${pct}%</div><div class="dl">Chapters mastered · \${done}/\${CH.length}</div></div>
+        <div class="eng-dash-card"><div class="dv">\${lessons}/\${total}</div><div class="dl">Lessons learned</div></div>
+        <div class="eng-dash-card"><div class="dv">\${known}</div><div class="dl">Flashcards known · of \${CARDS.length}</div></div>
+        <div class="eng-dash-card"><div class="dv">\${avg}%</div><div class="dl">Avg quiz · \${STATE.scores.length} taken</div></div>
+      </div>
+      <h4 style="margin:8px 0 6px;color:var(--ink);font-size:14px">By part</h4>\`;
+    PARTS.forEach((p,i)=>{const pr=partPct(p.id);
+      h+='<div class="eng-prow"><div class="pno" style="--pa:'+p.a+';--pb:'+p.b+'">'+(i+1)+'</div><div class="pname">'+esc(p.t)+'</div><div class="eng-bar" style="width:170px"><i style="width:'+pr.p+'%;background:linear-gradient(90deg,'+p.a+','+p.b+')"></i></div><div class="pct">'+pr.d+'/'+pr.t+'</div></div>'});
+    if(STATE.scores.length){h+='<h4 style="margin:26px 0 6px;color:var(--ink);font-size:14px">Score history</h4>';
+      STATE.scores.slice().reverse().slice(0,12).forEach(s=>{h+='<div class="eng-bar-row"><div class="bn">'+esc(s.label)+' <span style="color:var(--dim);font-size:11.5px">· '+new Date(s.at).toLocaleDateString()+'</span></div><div class="eng-bar"><i style="width:'+s.pct+'%;background:'+(s.pct>=75?"var(--good)":"var(--warn)")+'"></i></div><div class="bv">'+s.pct+'%</div></div>'})}
+    views.dash.innerHTML=h;icons();
+  }
+
+  // ---- bootstrap: route from hash, then go ----
+  function fromHash(){const h=(location.hash||"").replace(/^#/,"");if(!h)return ["library",null];const parts=h.split("/");return [parts[0],parts[1]?decodeURIComponent(parts[1]):null]}
+  const [t0,a0]=fromHash();
+  window.addEventListener("hashchange",()=>{const [t,a]=fromHash();go(t,a)});
+  updateCounts();go(t0,a0);
+})();
+</script>`;
+
+  const body = navBar("engineering") + hero + main + footer() + spa;
+  const html = page({
+    title: "AI Engineering — The AI School",
+    desc: "AI Engineering track at The AI School. Seven parts, 70 chapters: foundations, model internals, the application layer, agent harnesses, modalities, MLOps, and the research frontier — with flashcards, quizzes and progress tracking.",
+    body,
+    themeInit: "light",
+  });
+  writeFileSync(join(DIST, "ai-engineering", "index.html"), html);
 }
-:root[data-theme="light"]{
-  --bg:#f5f7fc;--bg2:#eef2fa;--card:#ffffff;--card2:#f3f6fd;--line:#e3e9f4;
-  --ink:#0f172a;--mut:#4a5878;--dim:#8a96b4;
-  --acc:#4f46e5;--acc2:#0ea5e9;--acc3:#7c3aed;--good:#16a34a;--warn:#d97706;--bad:#dc2626;
-  --glow:0 0 8px;
-}
 
-/* ---- LIGHT-MODE corrections (the original app was dark-first) -------- */
-:root[data-theme="light"] body{
-  background:
-    radial-gradient(900px 480px at 88% -10%,color-mix(in srgb,var(--acc) 8%,transparent),transparent 60%),
-    radial-gradient(720px 460px at -6% 110%,color-mix(in srgb,var(--acc2) 8%,transparent),transparent 58%),
-    var(--bg);
-}
-:root[data-theme="light"] .gcard{box-shadow:0 14px 40px -22px rgba(31,41,99,.28),0 2px 6px -3px rgba(31,41,99,.10)}
-:root[data-theme="light"] .gcard:before{opacity:.35}
-:root[data-theme="light"] .gcard .sub{color:var(--mut)}
-:root[data-theme="light"] .glow{text-shadow:none}
-:root[data-theme="light"] h1.glow,
-:root[data-theme="light"] h2.glow,
-:root[data-theme="light"] .hero h2{color:var(--ink)}
-:root[data-theme="light"] .logo{box-shadow:0 10px 24px -10px color-mix(in srgb,var(--acc) 60%,transparent)}
-:root[data-theme="light"] .scorebig.glow{text-shadow:none}
-
-:root[data-theme="light"] .top{background:color-mix(in srgb,#ffffff 86%,transparent);border-bottom:1px solid var(--line)}
-:root[data-theme="light"] nav.tabs button.on{
-  background:linear-gradient(135deg,var(--acc),var(--acc3));color:#fff;box-shadow:0 8px 22px -10px var(--acc)
-}
-:root[data-theme="light"] .part,
-:root[data-theme="light"] .lesson,
-:root[data-theme="light"] .face,
-:root[data-theme="light"] .stat,
-:root[data-theme="light"] .dcard,
-:root[data-theme="light"] .q,
-:root[data-theme="light"] .notecard,
-:root[data-theme="light"] .acat{
-  background:#fff;border-color:var(--line);
-  box-shadow:0 1px 0 rgba(15,23,42,.04),0 12px 28px -22px rgba(31,41,99,.22)
-}
-:root[data-theme="light"] .part.open{box-shadow:0 1px 0 rgba(15,23,42,.04),0 18px 36px -24px color-mix(in srgb,var(--pa,#4f46e5) 50%,transparent)}
-:root[data-theme="light"] .part-no{box-shadow:0 8px 16px -8px color-mix(in srgb,var(--pa,#4f46e5) 60%,transparent)}
-:root[data-theme="light"] .lesson{box-shadow:0 1px 0 rgba(15,23,42,.04),0 8px 22px -18px color-mix(in srgb,var(--la,#4f46e5) 45%,transparent)}
-:root[data-theme="light"] .lesson.learned .lhead .ltoggle{box-shadow:0 4px 12px -6px color-mix(in srgb,var(--good) 50%,transparent);color:#06402b}
-:root[data-theme="light"] .face{box-shadow:0 1px 0 rgba(15,23,42,.04),0 16px 36px -22px rgba(31,41,99,.25)}
-:root[data-theme="light"] .face.back{background:#f8fafc}
-:root[data-theme="light"] .btn{background:#fff}
-:root[data-theme="light"] .btn:hover{box-shadow:0 12px 28px -16px rgba(31,41,99,.30)}
-:root[data-theme="light"] .btn.pri{
-  background:linear-gradient(135deg,var(--acc),var(--acc3));color:#fff;
-  box-shadow:0 10px 24px -10px var(--acc)
-}
-:root[data-theme="light"] .iconbtn{background:#fff}
-:root[data-theme="light"] .opt{background:#fff}
-:root[data-theme="light"] .opt:hover{border-color:var(--acc)}
-:root[data-theme="light"] .expl{background:#f8fafc}
-:root[data-theme="light"] .notebox{background:#f8fafc;border-color:var(--line)}
-:root[data-theme="light"] .notebox textarea,
-:root[data-theme="light"] .field input,
-:root[data-theme="light"] .searchin,
-:root[data-theme="light"] select{background:#fff;border-color:var(--line);color:var(--ink)}
-:root[data-theme="light"] .who .av{box-shadow:0 6px 16px -8px var(--acc2)}
-:root[data-theme="light"] .ring i{background:#fff}
-:root[data-theme="light"] .pill{background:#fff}
-:root[data-theme="light"] .banner{background:linear-gradient(120deg,color-mix(in srgb,var(--acc) 6%,#fff),color-mix(in srgb,var(--acc2) 6%,#fff));color:var(--ink)}
-:root[data-theme="light"] .crumb,
-:root[data-theme="light"] .reader .blurb,
-:root[data-theme="light"] .hero p{color:var(--mut)}
-
-/* school-back chrome */
-.school-back{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;color:var(--mut);flex-shrink:0;margin-right:4px;transition:.18s;background:transparent}
-.school-back:hover{color:var(--ink);border-color:var(--acc);text-decoration:none}
-:root[data-theme="light"] .school-back{background:#fff}
-
-/* privacy notice on the gate */
-.privnote{margin-top:18px;display:flex;gap:9px;align-items:flex-start;font-size:11.5px;line-height:1.5;color:var(--mut);background:color-mix(in srgb,var(--acc) 8%,transparent);border:1px solid color-mix(in srgb,var(--acc) 22%,transparent);border-radius:11px;padding:10px 12px}
-.privnote i{color:var(--acc);flex-shrink:0;margin-top:2px}
-.privnote b{color:var(--ink)}
-:root[data-theme="light"] .privnote{background:#f3f4ff;border-color:#dadcff}
-</style>`;
-
-  // Privacy-first replacement for the gate: no PII required, prefilled
-  // generic handle, explicit notice that nothing leaves the device. Aligned
-  // with SOC 2 privacy principles (data minimization, transparency,
-  // local-only persistence). This is privacy hygiene — not a SOC 2 cert.
-  const newGate = `<section id="gate">
-  <div class="gatewrap"><div class="gcard">
-    <div class="logo">AI</div>
-    <h1 class="glow">AI Engineering</h1>
-    <p class="sub">Seven parts · 70 chapters · the whole stack, from the math substrate to the research frontier. Pick a display name (optional) and continue. Progress, notes &amp; scores stay on this device.</p>
-    <div class="field"><label>Display name <span style="font-weight:400;color:var(--dim);text-transform:none;letter-spacing:0">— optional, local only</span></label><input id="lname" placeholder="Learner" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" maxlength="40"></div>
-    <button class="btn pri big" id="enter">Enter the course <i data-lucide="arrow-right"></i></button>
-    <div class="privnote"><i data-lucide="shield-check"></i><span><b>Private by design.</b> No account, no email, no tracking. Everything you mark, write, or score is stored only in your browser&apos;s local storage and never sent anywhere. Clear it anytime via your browser settings or the Exit button.</span></div>
-    <button class="themepill" id="gtheme"><i data-lucide="moon"></i><span>theme</span></button>
-  </div></div>
-</section>`;
-
-  const securityHead = `<meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
-<meta name="robots" content="index,follow">
-<meta name="theme-color" content="#0b1020" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#f5f7fc" media="(prefers-color-scheme: light)">
-<script src="https://unpkg.com/lucide@latest"></script>`;
-
-  app = app
-    .replace("<title>AI Engineering — Neon Edition</title>", "<title>AI Engineering — The AI School</title>")
-    .replace(
-      '<div class="hbrand" id="hbrand"><div class="logo sm">AI</div><b>AI Engineering<span> · Neon</span></b></div>',
-      '<a class="school-back" href="__BASE__/" title="Back to The AI School" aria-label="Back to The AI School"><i data-lucide="arrow-left"></i></a><div class="hbrand" id="hbrand"><div class="logo sm">AI</div><b>AI Engineering<span> · AI School</span></b></div>'
-    )
-    .replace(
-      /<section id="gate">[\s\S]*?<\/section>/,
-      newGate
-    )
-    .replace("</head>", `${securityHead}\n</head>`)
-    .replace("</body>", `${skin}\n</body>`)
-    .replaceAll("__BASE__", BASE);
-
-  writeFileSync(join(DIST, "ai-engineering", "index.html"), app);
-}
 
 /* -------------------------------- emit ----------------------------------- */
 
