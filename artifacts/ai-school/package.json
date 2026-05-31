@@ -1,0 +1,15 @@
+{
+  "name": "@workspace/ai-school",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The AI School — a unified static online school: Practical AI track + AI Engineering course.",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "serve dist -l ${PORT:-8080} --no-clipboard"
+  },
+  "dependencies": {
+    "marked": "^14.1.4",
+    "serve": "^14.2.4"
+  }
+}

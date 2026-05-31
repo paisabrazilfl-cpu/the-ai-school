@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AI Engineering — Neon Edition</title>
+</head>
+<body>
+<section id="gate">
+  <div class="gatewrap"><div class="gcard">
+    <div class="logo">AI</div>
+    <h1 class="glow">AI Engineering</h1>
+    <p class="sub">Seven parts · 70 chapters · the whole stack, from the math substrate to the research frontier. Pick a name to start — progress, notes &amp; scores stay on this device.</p>
+    <div class="field"><label>Your name</label><input id="lname" placeholder="e.g. Luis" autocomplete="name"></div>
+    <button class="btn pri big" id="enter">Enter the course <i data-lucide="arrow-right"></i></button>
+    <button class="themepill" id="gtheme"><i data-lucide="moon"></i><span>theme</span></button>
+  </div></div>
+</section>
+
+<div id="app" style="display:none">
+  <header class="top"><div class="topin">
+    <button class="iconbtn back" id="backBtn" title="Back"><i data-lucide="arrow-left"></i></button>
+    <div class="hbrand" id="hbrand"><div class="logo sm">AI</div><b>AI Engineering<span> · Neon</span></b></div>
+    <nav class="tabs" id="tabs"></nav>
+    <button class="iconbtn" id="themeBtn" title="Light / dark"><i data-lucide="sun"></i></button>
+    <div class="who" id="who"></div>
+  </div></header>
+  <main>
+    <section class="view" id="v-library"></section>
+    <section class="view" id="v-reader"></section>
+    <section class="view" id="v-cards"></section>
+    <section class="view" id="v-quiz"></section>
+    <section class="view" id="v-notes"></section>
+    <section class="view" id="v-arena"></section>
+    <section class="view" id="v-dash"></section>
+  </main>
+</div>
+
+<style>
+:root{
+  --bg:#070310;--bg2:#0e0720;--card:#150b29;--card2:#1e1138;--line:#33205a;
+  --ink:#f4ecff;--mut:#b6a3da;--dim:#7d6aa6;
+  --acc:#00f0ff;--acc2:#ff2fd0;--acc3:#b14bff;--good:#39ffb0;--warn:#ffd23f;--bad:#ff4d7d;
+  --glow:0 0 22px;--mono:ui-monospace,'SFMono-Regular',Menlo,monospace;
+}
+:root[data-theme="light"]{
+  --bg:#f7f2ff;--bg2:#efe6ff;--card:#fff;--card2:#f4ecff;--line:#e0cffb;
+  --ink:#1c0f33;--mut:#5d4a82;--dim:#9483b3;
+  --acc:#b400c8;--acc2:#0a86ff;--acc3:#7b2ff7;--good:#00a86b;--warn:#c97c00;--bad:#dc2768;--glow:0 0 12px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:radial-gradient(1000px 560px at 88% -12%,color-mix(in srgb,var(--acc) 24%,transparent),transparent 60%),radial-gradient(820px 520px at -8% 112%,color-mix(in srgb,var(--acc2) 22%,transparent),transparent 58%),radial-gradient(700px 700px at 50% 140%,color-mix(in srgb,var(--acc3) 14%,transparent),transparent 60%),var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .4s,color .3s}
+a{color:var(--acc);text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.glow{text-shadow:var(--glow) color-mix(in srgb,var(--acc) 50%,transparent),0 0 4px color-mix(in srgb,var(--acc2) 40%,transparent)}
+.mono{font-family:var(--mono)}
+i[data-lucide]{width:1em;height:1em;vertical-align:-.125em;stroke-width:2.2}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+.logo{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;font-weight:900;font-size:26px;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc3) 55%,var(--acc2));box-shadow:var(--glow) color-mix(in srgb,var(--acc) 70%,transparent);letter-spacing:-1px;margin-bottom:14px}
+.logo.sm{width:34px;height:34px;border-radius:10px;font-size:15px;margin:0}
+#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.gatewrap{width:100%;max-width:460px}
+.gcard{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:26px;padding:38px 32px;box-shadow:0 40px 120px rgba(0,0,0,.55),inset 0 1px 0 color-mix(in srgb,var(--acc) 20%,transparent);position:relative;overflow:hidden}
+.gcard:before{content:"";position:absolute;inset:-2px;border-radius:26px;padding:2px;background:linear-gradient(120deg,var(--acc),transparent 40%,transparent 60%,var(--acc2));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.6;pointer-events:none}
+.gcard h1{font-size:34px;margin:4px 0 8px;letter-spacing:-1px;line-height:1.05}
+.gcard .sub{color:var(--mut);font-size:14.5px;margin:0 0 24px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+.field input,.searchin{width:100%;background:color-mix(in srgb,var(--bg) 70%,#000 6%);border:1px solid var(--line);border-radius:12px;color:var(--ink);padding:13px 14px;font-size:15px;font-family:inherit;transition:border .2s,box-shadow .2s}
+.field input:focus,.searchin:focus{outline:none;border-color:var(--acc);box-shadow:var(--glow) color-mix(in srgb,var(--acc) 35%,transparent)}
+.themepill{margin-top:18px;display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--mut);border:1px solid var(--line);padding:7px 12px;border-radius:999px}
+.themepill:hover{color:var(--ink);border-color:var(--acc)}
+.btn{background:var(--card2);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:10px 16px;font-size:14px;font-weight:600;transition:.18s;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:var(--acc);box-shadow:var(--glow) color-mix(in srgb,var(--acc) 25%,transparent);transform:translateY(-1px)}
+.btn.pri{background:linear-gradient(135deg,var(--acc),var(--acc3));color:#fff;border:0;box-shadow:var(--glow) color-mix(in srgb,var(--acc2) 50%,transparent)}
+.btn.pri:hover{filter:brightness(1.1)}
+.btn.big{width:100%;justify-content:center;padding:14px;font-size:15px}
+.btn.sm{padding:7px 12px;font-size:12.5px}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mut);letter-spacing:.4px}
+.top{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.topin{max-width:1160px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.iconbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;font-size:17px;color:var(--mut);flex-shrink:0;transition:.18s}
+.iconbtn:hover{color:var(--ink);border-color:var(--acc);box-shadow:var(--glow) color-mix(in srgb,var(--acc) 30%,transparent)}
+.iconbtn.back[hidden]{display:none}
+.hbrand{display:flex;align-items:center;gap:9px;cursor:pointer;flex-shrink:0}
+.hbrand b{font-size:15px;letter-spacing:-.3px;white-space:nowrap}
+.hbrand b span{color:var(--mut);font-weight:500}
+nav.tabs{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+nav.tabs button{color:var(--mut);padding:8px 12px;border-radius:10px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+nav.tabs button:hover{color:var(--ink);background:var(--card)}
+nav.tabs button.on{color:#fff;background:linear-gradient(135deg,color-mix(in srgb,var(--acc) 85%,#000),var(--acc3));box-shadow:var(--glow) color-mix(in srgb,var(--acc) 40%,transparent)}
+.who{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.who .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff;background:linear-gradient(135deg,var(--acc2),var(--acc3))}
+.who .out{font-size:11px;color:var(--mut);border:1px solid var(--line);border-radius:8px;padding:6px 9px}
+.who .out:hover{color:var(--ink);border-color:var(--bad)}
+main{max-width:1160px;margin:0 auto;padding:26px 16px 90px}
+.view{display:none;animation:fade .3s ease}.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.hero{margin:2px 0 22px}
+.hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--acc)}
+.hero h2{font-size:clamp(26px,5vw,38px);margin:8px 0 8px;letter-spacing:-1px;line-height:1.04}
+.hero p{color:var(--mut);max-width:66ch;margin:0;font-size:15px}
+.statbar{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 0}
+.stat{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:14px;padding:12px 16px;min-width:98px;position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.stat .v{font-size:22px;font-weight:900;font-family:var(--mono)}
+.stat .l{font-size:10.5px;color:var(--mut);margin-top:5px;letter-spacing:.4px;text-transform:uppercase}
+.part{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:20px;margin-bottom:16px;overflow:hidden;transition:box-shadow .25s}
+.part.open{box-shadow:var(--glow) color-mix(in srgb,var(--pa,#fff) 22%,transparent)}
+.part-head{display:flex;align-items:center;gap:15px;padding:18px 18px;cursor:pointer;position:relative}
+.part-head:hover{background:var(--card2)}
+.part-spine{position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--pa),var(--pb))}
+.part-no{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-family:var(--mono);font-weight:800;font-size:14px;color:#fff;flex-shrink:0;background:linear-gradient(135deg,var(--pa),var(--pb));box-shadow:var(--glow) color-mix(in srgb,var(--pa) 55%,transparent)}
+.part-head h3{margin:0;font-size:18px;letter-spacing:-.3px}
+.part-head p{margin:3px 0 0;color:var(--mut);font-size:12.5px}
+.part-meta{margin-left:auto;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.ring{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
+.ring i{width:31px;height:31px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:10px;font-family:var(--mono);font-weight:800;font-style:normal;color:var(--ink)}
+.chev{color:var(--dim);transition:transform .25s;font-size:18px;display:grid}
+.part.open .chev{transform:rotate(90deg);color:var(--acc)}
+.chapters{display:none;padding:4px 12px 14px}.part.open .chapters{display:block}
+.chap{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;cursor:pointer;border:1px solid transparent;transition:.15s}
+.chap:hover{background:var(--card2);border-color:var(--line);transform:translateX(3px)}
+.chap .cn{font-family:var(--mono);font-size:11.5px;color:var(--dim);width:48px;flex-shrink:0}
+.chap .ct{flex:1;min-width:0}
+.chap .ct b{font-weight:600;font-size:14.5px;display:block}
+.chap .ct span{color:var(--mut);font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chap .cr{flex-shrink:0;font-family:var(--mono);font-size:10px;color:var(--dim);display:flex;align-items:center;gap:5px}
+.chap .cr .mini{width:30px;height:4px;border-radius:3px;background:var(--line);overflow:hidden}
+.chap .cr .mini i{display:block;height:100%;background:linear-gradient(90deg,var(--good),var(--acc))}
+.rtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.crumb{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.reader h2{font-size:clamp(23px,4.6vw,32px);letter-spacing:-.7px;margin:10px 0 8px;line-height:1.08}
+.reader .blurb{color:var(--mut);font-size:16px;max-width:70ch;margin:0 0 8px}
+.lhint{font-size:12.5px;color:var(--dim);margin:0 0 16px;display:flex;align-items:center;gap:7px}
+.lesson{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--la,var(--acc));border-radius:14px;margin-bottom:12px;box-shadow:-6px 0 18px -12px var(--la,var(--acc));overflow:hidden;transition:box-shadow .2s}
+.lesson.learned{border-left-color:var(--good);box-shadow:-6px 0 18px -12px var(--good)}
+.lhead{display:flex;gap:12px;align-items:center;padding:15px 18px;cursor:pointer;user-select:none}
+.lhead:hover{background:var(--card2)}
+.lhead .ltoggle{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--line);display:grid;place-items:center;flex-shrink:0;color:transparent;transition:.18s;font-size:14px}
+.lesson.learned .lhead .ltoggle{background:linear-gradient(135deg,var(--good),var(--acc));border-color:transparent;color:#062;box-shadow:var(--glow) color-mix(in srgb,var(--good) 50%,transparent)}
+.lhead .ltitle{flex:1;font-size:15px;font-weight:600;line-height:1.4}
+.lhead .lchev{color:var(--dim);flex-shrink:0;transition:transform .25s;display:grid}
+.lesson.open .lhead .lchev{transform:rotate(180deg);color:var(--acc)}
+.lbody{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.lesson.open .lbody{max-height:400px}
+.lbody .lbin{padding:0 18px 16px 54px;color:var(--ink);font-size:14.5px;line-height:1.62}
+.lbody .lbin .tag{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10.5px;color:var(--acc2);border:1px solid var(--line);border-radius:7px;padding:3px 8px}
+.rnav{display:flex;gap:10px;align-items:center;margin-top:22px;flex-wrap:wrap}.rnav .sp{flex:1}
+.notebox{background:var(--bg2);border:1px dashed var(--line);border-radius:14px;padding:14px 16px;margin:18px 0}
+.notebox label{font-size:12px;color:var(--mut);font-weight:600;display:flex;align-items:center;gap:7px}
+.notebox textarea{width:100%;margin-top:8px;background:color-mix(in srgb,var(--bg) 70%,#000 5%);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:11px;font:14px/1.55 inherit;resize:vertical;min-height:84px}
+.notebox textarea:focus{outline:none;border-color:var(--acc)}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+select{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:11px;padding:10px 12px;font:14px inherit}
+select:focus{outline:none;border-color:var(--acc)}
+.card3d{perspective:1600px;max-width:600px;margin:0 auto}
+.flip{position:relative;width:100%;min-height:230px;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;cursor:pointer}
+.flip.f{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;border:1px solid var(--line);padding:30px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(180deg,var(--card),var(--bg2));box-shadow:var(--glow) color-mix(in srgb,var(--acc) 18%,transparent)}
+.face.back{transform:rotateY(180deg);background:linear-gradient(180deg,var(--card2),var(--card));box-shadow:var(--glow) color-mix(in srgb,var(--acc2) 22%,transparent)}
+.face .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.face .term{font-size:25px;font-weight:800;letter-spacing:-.3px}
+.face .def{font-size:16px;color:var(--ink);line-height:1.55}
+.cardbar{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.cprog{text-align:center;color:var(--mut);font-size:12.5px;margin-top:10px;font-family:var(--mono)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:17px 18px;margin-bottom:14px}
+.q .qn{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:.8px}
+.q .qt{font-size:16px;font-weight:600;margin:7px 0 13px}
+.opt{display:block;width:100%;text-align:left;background:var(--bg2);border:1px solid var(--line);color:var(--ink);border-radius:11px;padding:11px 14px;margin-bottom:8px;font-size:14.5px;transition:.15s}
+.opt:hover{border-color:var(--acc)}
+.opt.sel{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 14%,transparent);box-shadow:var(--glow) color-mix(in srgb,var(--acc) 25%,transparent)}
+.opt.correct{border-color:var(--good);background:color-mix(in srgb,var(--good) 16%,transparent)}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 15%,transparent)}
+.expl{font-size:13.5px;color:var(--mut);margin-top:8px;padding:10px 12px;background:var(--bg2);border-radius:9px;border-left:2px solid var(--acc2)}
+.scorebig{font-size:66px;font-weight:900;font-family:var(--mono);letter-spacing:-2px;line-height:1}
+.brk{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.brk .bn{flex:1}.brk .bv{font-family:var(--mono)}
+.bar{height:7px;background:var(--line);border-radius:5px;overflow:hidden;width:120px;flex-shrink:0}
+.bar i{display:block;height:100%;border-radius:5px}
+.notecard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 18px;margin-bottom:12px}
+.notecard .nh{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.notecard .nh b{font-size:14.5px}.notecard .nh .src{font-size:11px;color:var(--dim);font-family:var(--mono)}
+.notecard .nb{color:var(--ink);font-size:14px;white-space:pre-wrap;line-height:1.55}.go{margin-left:auto}
+.agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.acat{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:18px;padding:18px;position:relative;overflow:hidden}
+.acat:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--ca),transparent)}
+.acat h4{margin:0 0 4px;font-size:15px;display:flex;align-items:center;gap:9px}
+.acat .cd{font-size:12px;color:var(--dim);margin:0 0 12px}
+.src{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;border:1px solid transparent;margin:0 -6px;transition:.15s}
+.src:hover{background:var(--card2);border-color:var(--line);transform:translateX(3px)}
+.src .sdot{flex-shrink:0;box-shadow:var(--glow) currentColor}
+.src b{font-size:13.5px;color:var(--ink);font-weight:600;display:block}
+.src small{font-size:11px;color:var(--dim);font-family:var(--mono)}
+.src .ext{margin-left:auto;color:var(--dim)}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.dcard{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:18px;padding:20px;position:relative;overflow:hidden}
+.dcard:after{content:"";position:absolute;inset:0;background:radial-gradient(120px 80px at 90% 10%,color-mix(in srgb,var(--acc) 18%,transparent),transparent);pointer-events:none}
+.dcard .dv{font-size:42px;font-weight:900;font-family:var(--mono);letter-spacing:-1.5px;line-height:1}
+.dcard .dl{color:var(--mut);font-size:13px;margin-top:7px}
+.prow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.prow .pno{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.prow .pname{flex:1;font-size:14px}.prow .pct{font-family:var(--mono);font-size:13px;color:var(--mut);width:48px;text-align:right}
+.empty{text-align:center;color:var(--dim);padding:40px 20px;font-size:14px}
+.foot{text-align:center;color:var(--dim);font-size:12px;margin-top:48px;line-height:1.6;max-width:72ch;margin-inline:auto}
+.banner{background:linear-gradient(120deg,color-mix(in srgb,var(--acc) 12%,transparent),color-mix(in srgb,var(--acc2) 12%,transparent));border:1px solid var(--line);border-radius:14px;padding:12px 16px;font-size:13px;color:var(--mut);margin-bottom:20px}.banner b{color:var(--ink)}
+@media(max-width:640px){.hbrand b span{display:none}.part-meta .ring{display:none}nav.tabs button span{display:none}nav.tabs button{padding:8px 10px}.lbody .lbin{padding-left:18px}}
+</style>
+
+<script>
+const PARTS=[
+ {id:"f",t:"Foundations",s:"The mathematical & classical-ML substrate",a:"#00f0ff",b:"#39d0c0",ch:[
+  ["Linear Algebra","Vectors, matrices, and the operations that move data through every model.",[["Vectors encode data and meaning; dot products measure similarity.","A vector is just an ordered list of numbers — but that list can represent a word, an image patch, or a user. The dot product between two vectors grows when they point the same way, which is exactly why it's the workhorse for measuring similarity in search, attention, and embeddings.","dot product = similarity"],["Matrix multiplication is how layers transform representations.","Every layer in a neural net is, at heart, a matrix multiply: it takes a vector of features and linearly remaps it into a new space. Stack these remaps with non-linearities between them and you get the expressive power of deep models.","Wx = new representation"],["Eigenvectors & SVD reveal structure and power PCA and compression.","Eigenvectors are the directions a matrix stretches without rotating; SVD generalizes this to any matrix. These decompositions expose the dominant axes of variation in data — the basis of PCA, low-rank compression, and a lot of why dimensionality reduction works.","SVD → PCA, compression"]]],
+  ["Probability","Reasoning under uncertainty — the native language of learning.",[["Conditional probability and Bayes' rule update beliefs with evidence.","Bayes' rule is the engine of belief updating: prior × likelihood → posterior. It's how a model (or a person) should revise a hypothesis when new data arrives, and it underlies everything from spam filters to Bayesian inference.","posterior ∝ prior × likelihood"],["Distributions model data and noise.","A distribution assigns probability across outcomes. The Gaussian shows up everywhere thanks to the central limit theorem; Bernoulli/categorical model discrete choices. Picking the right distribution is half of modeling well.","Gaussian, Bernoulli, categorical"],["Expectation and variance summarize random outcomes.","Expectation is the long-run average; variance is how much outcomes spread around it. Together they're the two-number summary you reach for first, and they underpin loss functions and uncertainty estimates.","mean & spread"]]],
+  ["Calculus & Information Theory","Gradients to learn, entropy to measure.",[["Gradients give the direction of steepest descent.","The gradient is the vector of partial derivatives — it points uphill on the loss surface, so you step the opposite way to learn. Every gradient-based optimizer is built on this single idea.","∇f points uphill"],["The chain rule makes backpropagation possible.","Backprop is just the chain rule applied through a computation graph: multiply local derivatives layer by layer to get the gradient of the loss w.r.t. every weight. Without it, training deep nets would be intractable.","chain rule → backprop"],["Entropy, cross-entropy and KL divergence quantify information and loss.","Entropy measures uncertainty in bits; cross-entropy measures the cost of using the wrong distribution (and is the standard classification loss); KL divergence measures how far one distribution is from another. They tie learning to information.","cross-entropy = the loss"]]],
+  ["Classical ML — Supervised","Learning a mapping from inputs to labels.",[["Linear and logistic regression are the baselines to beat.","Linear regression fits a line to predict numbers; logistic regression squashes a linear score through a sigmoid to predict probabilities. Simple, fast, interpretable — always your first baseline.","start simple"],["SVMs maximize the margin; kernels handle non-linearity.","A support vector machine finds the boundary with the widest margin between classes; the kernel trick lets it draw curved boundaries by implicitly working in a higher-dimensional space.","widest margin + kernels"],["Generative vs discriminative framing changes what you model.","Discriminative models learn P(y|x) directly (logistic regression); generative models learn P(x,y) and can synthesize data (naive Bayes). The choice shapes data efficiency and what the model can do.","P(y|x) vs P(x,y)"]]],
+  ["Trees, Ensembles & Unsupervised","Splits, crowds, and finding structure without labels.",[["Decision trees split on information gain.","A tree asks a sequence of yes/no questions, choosing each split to reduce impurity the most. Intuitive and interpretable, but a single deep tree overfits — which is why we ensemble them.","split to reduce impurity"],["Bagging and boosting combine weak learners.","Bagging (Random Forest) trains many trees on bootstrap samples and averages them to cut variance; boosting (XGBoost) trains trees sequentially, each fixing the last's errors, to cut bias. Ensembles dominate tabular ML.","forests & gradient boosting"],["k-means, DBSCAN and PCA find structure without labels.","Unsupervised methods discover patterns: k-means partitions into k clusters, DBSCAN finds density-based clusters of any shape, PCA projects onto the directions of greatest variance.","cluster & reduce"]]],
+  ["Model Evaluation & Validation","Knowing whether your model actually works.",[["The bias-variance tradeoff governs over- and under-fitting.","High bias = too simple, underfits; high variance = too complex, memorizes noise. Generalization lives at the balance point, and most tuning is really about navigating this tradeoff.","the central tradeoff"],["Train/val/test splits plus cross-validation prevent self-deception.","You tune on validation, report on a held-out test set you touch once, and use k-fold cross-validation to get a stable estimate. Skip this discipline and you'll fool yourself.","never test on train"],["Learning curves diagnose what to fix.","Plotting error vs training-set size tells you whether you're limited by data (curves still converging) or by model capacity (high error plateau) — so you know whether to gather data or change the model.","data-limited vs model-limited"]]],
+  ["Optimization","How learning actually happens, step by step.",[["Gradient descent minimizes the loss.","Compute the gradient, step against it, repeat. Batch uses all data per step (stable, slow), SGD uses one example (noisy, fast), mini-batch is the practical middle ground that powers deep learning.","batch / SGD / mini-batch"],["Momentum and Adam accelerate and stabilize.","Momentum carries velocity through flat regions and dampens oscillation; Adam adapts a per-parameter learning rate using running gradient statistics. Adam is the default optimizer for most deep nets.","adaptive optimizers"],["L1/L2 and dropout regularize against overfitting.","L2 shrinks weights smoothly, L1 drives some to zero (feature selection), dropout randomly disables neurons during training to prevent co-adaptation. All trade a little training fit for better generalization.","penalize complexity"]]],
+  ["Data Engineering","Garbage in, garbage out — the unglamorous half of ML.",[["Scaling and encoding prepare features.","Models expect comparable numeric inputs: standardize/normalize continuous features, one-hot or embed categoricals. Skipping this wrecks distance- and gradient-based methods.","standardize & encode"],["Data leakage silently inflates scores.","Leakage is when information unavailable at prediction time sneaks into training — a future value, a target-derived feature, fitting a scaler on the full dataset. It produces gorgeous validation numbers that collapse in production.","the silent killer"],["Class imbalance needs resampling or reweighting.","When one class is rare, accuracy becomes meaningless and models ignore the minority. Fixes: resample (SMOTE/undersample), reweight the loss, and evaluate with precision/recall.","handle the rare class"]]],
+  ["Evaluation Metrics","Measuring the right thing, not the easy thing.",[["Accuracy lies on imbalanced data.","If 99% of cases are negative, a model that always says 'negative' scores 99% accuracy while being useless. Accuracy alone hides this — you need metrics that separate the error types.","the accuracy trap"],["Precision/recall/F1 trade error types.","Precision asks 'of those I flagged, how many were right?'; recall asks 'of all the real positives, how many did I catch?'. F1 is their harmonic mean. Which matters depends on the cost of false positives vs false negatives.","precision vs recall"],["ROC-AUC, calibration, and Goodhart's law.","ROC-AUC summarizes ranking across thresholds (use PR curves when positives are rare); calibration checks whether predicted probabilities are honest; and Goodhart warns that once a metric becomes the target, it stops being a good metric.","measure honestly"]]],
+  ["The ML Workflow","From a fuzzy problem to a working system.",[["Frame the problem and set a baseline first.","Before modeling, define the prediction target, the metric, and a dumb baseline (majority class, last value). If you can't beat the baseline, the fancy model isn't earning its keep.","baseline before complexity"],["Error analysis beats blind tuning.","Look at the actual mistakes, cluster them, and you'll usually find a data or framing fix worth more than any hyperparameter sweep. Read your errors.","read your errors"],["Reproducibility and honest reporting close the loop.","Pin seeds, version data and code, report on a clean test set, and state limitations. Trust comes from a result that someone else can reproduce.","make it reproducible"]]],
+ ]},
+ {id:"m",t:"How Models Work",s:"Architecture & the full training/inference lifecycle",a:"#b14bff",b:"#ff2fd0",ch:[
+  ["Neural Network Basics","Neurons, layers, and the magic of non-linearity.",[["A neuron is a weighted sum plus an activation.","Each neuron multiplies its inputs by weights, adds a bias, and passes the result through a non-linear activation. Stack thousands of these and you have a network that can fit complex functions.","wx+b then activate"],["Non-linear activations let networks approximate anything.","Without a non-linearity, stacking layers just collapses to one linear map. ReLU and friends introduce the bends that let deep nets approximate arbitrary functions — the universal approximation idea.","why ReLU matters"],["Forward pass predicts; backprop assigns blame.","The forward pass runs inputs through to a prediction; backprop sends the error backward, computing how much each weight contributed so the optimizer can correct it.","predict, then correct"]]],
+  ["CNNs (Vision)","Exploiting the spatial structure of images.",[["Convolutions share weights and detect local patterns.","A small filter slides across the image, reusing the same weights everywhere. This weight-sharing makes CNNs efficient and translation-aware — a cat is a cat wherever it appears.","sliding filters"],["Pooling builds translation-tolerant hierarchies.","Pooling downsamples feature maps, so later layers see larger receptive fields and care less about exact position. The result is a hierarchy from edges → textures → parts → objects.","edges → objects"],["ResNet enabled depth; ViT reframed images as tokens.","Residual skip connections let gradients flow through very deep nets (ResNet). Later, Vision Transformers chopped images into patches and treated them as tokens, bringing attention to vision.","skips, then patches-as-tokens"]]],
+  ["RNNs & LSTMs","Sequence modeling before transformers.",[["Recurrence carries hidden state across time.","An RNN processes a sequence one step at a time, passing a hidden state forward as memory. Elegant, but inherently sequential — it can't parallelize across the sequence.","memory through time"],["Vanishing gradients crippled plain RNNs.","Backpropagating through many steps multiplies many small numbers, so gradients vanish and long-range dependencies are lost. This was the core limitation.","long-range fails"],["LSTM/GRU gates fixed memory — until attention won.","Gated cells learn what to keep, forget, and output, handling longer dependencies. They ruled NLP until the transformer's parallel attention made recurrence largely obsolete.","gates, then displaced"]]],
+  ["The Transformer ★","The single architecture that changed everything.",[["Self-attention lets every token weigh every other.","Each token emits a query, key, and value; attention scores every pair via query·key, then mixes values by those weights. This is how a model builds context-aware representations in one parallel step.","Q·K → weighted V"],["Multi-head attention + positional encoding.","Multiple attention heads look at different relationships in parallel; positional encodings (or RoPE) inject order, since attention itself is permutation-blind. Together they capture rich, ordered structure.","heads + position"],["Stacked blocks scale cleanly — the keystone.","A transformer block (attention + feed-forward + norms + residuals) repeated dozens of times, trained on enormous data, is the backbone of essentially every modern LLM. Its parallelism is why scaling worked.","the backbone of LLMs"]]],
+  ["Pretraining","Learning language from oceans of raw text.",[["Next-token prediction is the objective.","The model is trained to predict the next token given all previous ones. This single self-supervised objective, at scale, forces it to learn grammar, facts, and reasoning patterns.","predict the next token"],["Scale of data + compute builds the base model.","Pretraining consumes trillions of tokens and enormous compute (~6N FLOPs per token for N params). The output is a 'base model' rich in knowledge but not yet aligned to follow instructions.","trillions of tokens"],["The base model isn't yet an assistant.","A freshly pretrained model completes text rather than helpfully answering. Turning it into a chatbot requires the post-training in the next chapter.","completion ≠ assistant"]]],
+  ["Post-Training & Alignment","Turning a raw base model into a helpful assistant.",[["SFT teaches instruction-following.","Supervised fine-tuning on curated instruction→response pairs teaches the base model to actually answer questions in the desired format and tone.","teach the format"],["RLHF/PPO aligns to human preferences.","A reward model learns human preferences from comparisons; PPO then optimizes the policy to score well, with a KL penalty keeping it from drifting far from the SFT model.","preferences → policy"],["DPO simplifies it; reward hacking is the risk.","Direct Preference Optimization skips the separate reward model and RL loop, optimizing preferences directly. Across methods, reward hacking — gaming the proxy instead of the goal — is the persistent danger.","simpler, but watch hacking"]]],
+  ["Efficient Tuning & Compression","Doing more with far less compute.",[["LoRA/QLoRA tune a tiny fraction of weights.","Instead of updating all parameters, LoRA injects small low-rank adapters; QLoRA does it on a quantized base. You get most of the benefit of fine-tuning for a fraction of the memory and cost.","adapters, not full retrain"],["Quantization shrinks memory.","Representing weights in INT4/INT8 and the KV cache in FP8 dramatically cuts memory and speeds memory-bound decode, usually with minor quality loss (GPTQ/AWQ).","fewer bits"],["Distillation transfers capability to small models.","A large 'teacher' generates outputs (including reasoning traces) that train a small 'student', compressing much of the capability into a cheaper, deployable model.","teacher → student"]]],
+  ["Inference & Decoding","How a trained model actually generates.",[["Autoregressive: prefill, then decode.","Generation has two phases — a parallel prefill that processes the prompt and a sequential decode that emits one token at a time. They have opposite hardware profiles, which drives all serving optimization.","prefill || , decode →"],["Temperature and top-p shape sampling.","Temperature flattens or sharpens the probability distribution; top-p (nucleus) samples only from the smallest set covering p of the mass. Together they trade determinism for creativity.","control randomness"],["KV cache, PagedAttention, speculative decoding.","The KV cache avoids recomputing past tokens; PagedAttention stores it efficiently; speculative decoding drafts several tokens and verifies them in parallel for big speedups.","serve it fast"]]],
+  ["Scaling Laws & Emergence","Why bigger + more data changed the game.",[["Loss falls predictably with scale.","Across orders of magnitude, test loss decreases as a smooth power law in parameters, data, and compute. This predictability is what justified spending fortunes on bigger runs.","power-law improvement"],["Chinchilla balanced data to params.","The Chinchilla result showed many models were undertrained: for a compute budget, you want roughly balanced tokens and parameters (~20:1) — and you train even longer when inference demand is high.","~20 tokens per param"],["Some abilities emerge past a threshold.","Certain capabilities appear abruptly only beyond a scale threshold rather than improving smoothly — the 'emergence' debate. In-context learning is the headline example.","sudden new abilities"]]],
+  ["The Big Picture","From text on the internet to a working assistant.",[["Pretrain → post-train → serve.","The full pipeline: pretrain a base model on raw text, align it via SFT + RLHF/DPO, then serve it efficiently. Each stage is a distinct discipline.","the whole pipeline"],["Diffusion and multimodality extend the family.","Transformers aren't the only game — diffusion models generate images, and multimodal models fuse text, vision, and audio. The toolkit is broader than LLMs alone.","beyond text"],["Capabilities are real — and so are limits.","Modern models are genuinely powerful yet still hallucinate, lack reliable grounding, and have a knowledge cutoff. Honest use means knowing both halves.","power and limits"]]],
+ ]},
+ {id:"a",t:"The Application Layer",s:"Prompting, RAG, tools/MCP, structured output, guardrails",a:"#39ffb0",b:"#9be15d",ch:[
+  ["Prompt Engineering","Programming a model with nothing but words.",[["Clarity, specificity and examples drive quality.","Models do what you actually say, not what you mean. Specific instructions, explicit constraints, and a few worked examples (few-shot) sharply raise output quality.","be specific; show examples"],["Chain-of-thought elicits reasoning.","Asking the model to think step by step before answering improves accuracy on multi-step problems by giving it room to work — the reasoning becomes part of the computation.","think step by step"],["Roles, delimiters and format control output.","A system role sets behavior; delimiters separate instructions from data (and blunt injection); explicit output format pins down the shape you'll parse.","structure the prompt"]]],
+  ["Context Engineering","Managing the model's finite attention budget.",[["Context is a budget — signal beats volume.","The context window is finite and attention degrades as it fills. The craft is finding the smallest set of high-signal tokens that maximize the chance of the output you want.","smallest high-signal set"],["Context rot and lost-in-the-middle.","As context grows, quality drops and models attend least to the middle of long inputs. More context is not always better — placement and pruning matter.","middle gets ignored"],["Compaction and retrieval keep it lean.","Summarize or clear stale turns and tool outputs; retrieve only what's relevant for the current step. Treat the window as working memory to be curated, not a dump.","curate the window"]]],
+  ["RAG Foundations","Grounding a model in your own data.",[["Retrieve → augment → generate cuts hallucination.","RAG fetches relevant documents and puts them in context so the model answers from real sources instead of inventing — the standard way to ground on private or current data.","ground in real docs"],["Embeddings + vector search find chunks.","Documents are embedded into vectors; a query is embedded and matched by similarity to retrieve the closest chunks. This semantic search is the retrieval engine.","semantic retrieval"],["Chunking and citations make it trustworthy.","How you split documents shapes what can be retrieved; returning citations lets users verify. Good chunking + attribution is most of what separates a useful RAG from a frustrating one.","chunk well, cite sources"]]],
+  ["Advanced RAG & Retrieval","Making retrieval actually reliable.",[["Hybrid search + reranking lifts quality.","Combine semantic (vector) and lexical (keyword) retrieval to catch both meaning and exact terms, then rerank candidates with a stronger model to put the best context first.","vector + keyword + rerank"],["Query transforms improve matching.","Rewriting vague queries, decomposing multi-part ones, and HyDE (generate a hypothetical answer, then search with it) all bridge the gap between how users ask and how documents are written.","rewrite, decompose, HyDE"],["GraphRAG and agentic/self-RAG.","Graph-based retrieval reasons over relationships; agentic and self-correcting RAG let the model decide what to retrieve, critique results, and retry — handling the hard, multi-hop cases.","reason over retrieval"]]],
+  ["Tool Use & Function Calling","Letting a model reach beyond text.",[["Tools are typed APIs the model can call.","Function calling lets the model emit a structured request to run code, query a database, or hit an API — turning a text generator into something that can act.","the model can act"],["Design tools for the model; return structured errors.","Good tools have clear names, minimal arguments, and return concise, structured results and errors the model can reason about — not a database dump or a raw stack trace.","model-friendly tools"],["Choose between tools, RAG and code.","Retrieval for knowledge, tools for actions/live data, code execution for precise computation. Matching the mechanism to the task is the design skill.","right mechanism per task"]]],
+  ["MCP","The USB-C port for tool integration.",[["MCP standardizes tools, resources and prompts.","The Model Context Protocol is an open standard for exposing tools, data (resources), and prompt templates to any model — so integrations aren't bespoke per app.","one open standard"],["Client–server–transport: M×N → M+N.","Instead of building every app-to-tool integration separately (M×N), each tool implements MCP once and each client speaks it once (M+N). Massive reduction in integration work.","integrate once"],["Annotations are hints, not security.","Tool annotations (like 'read-only') guide the model but are not enforced guarantees. Never rely on them for safety — validate and gate on your own side.","verify, don't trust hints"]]],
+  ["Agent Harnesses","Where function calls become autonomy.",[["A harness wraps the loop.","The harness is the scaffold around the model: it manages the plan→act→observe loop, tool access, memory, and the limits that keep the agent on task.","the scaffold"],["Workflows vs agents — escalate only as needed.","Workflows orchestrate LLMs through fixed code paths (predictable); agents dynamically choose their own steps (flexible). Start with the simplest thing that works.","simplest that works"],["Multi-agent buys isolation at a cost.","Splitting work across agents gives clean context per subtask and parallelism, but adds coordination overhead and token cost — often a single well-designed agent wins.","isolation vs overhead"]]],
+  ["Structured Output & Schemas","Reliable, machine-readable responses.",[["Three reliability levels.","Level 1: ask for JSON in the prompt (unreliable). Level 2: function calling (better). Level 3: constrained decoding that restricts generation to a grammar — guaranteed schema-valid output.","prompt < function < constrained"],["JSON Schema is the contract.","A schema defines exactly the shape your code expects; it's the contract between an unpredictable model and a program that needs predictable fields to parse.","the model↔code contract"],["Valid is not the same as correct.","Constrained decoding guarantees the JSON parses — it does not guarantee the values are right. You still validate semantics.","schema-valid ≠ true"]]],
+  ["Guardrails & Safety","Keeping an AI application safe in the wild.",[["Input and output guardrails.","Filter and validate what goes into the model (jailbreak/PII detection) and what comes out (toxicity, leakage, format checks). Defense on both sides of the call.","filter in and out"],["Prompt injection and the lethal trifecta.","Injection hijacks the model via malicious content; the lethal trifecta — private data + untrusted input + external communication — is the combination that enables real exfiltration.","the core threat"],["Least privilege, gating, human-in-the-loop.","Give tools the minimum access they need, gate dangerous actions behind confirmation, and keep a human in the loop for high-stakes steps.","contain the blast radius"]]],
+  ["Fine-tune vs Prompt vs RAG","Reaching for the right lever.",[["Three levers for three problems.","Prompt to change behavior, RAG to add knowledge, fine-tune to bake in form/style or a narrow skill. Naming which problem you have picks the lever.","behavior / knowledge / form"],["Escalate prompt → RAG → fine-tune.","Start with prompting (cheapest, fastest), add retrieval if it's a knowledge gap, and only fine-tune when prompting and RAG genuinely fall short.","cheapest first"],["Stacking all three is common.","Production systems often fine-tune for style, RAG for facts, and prompt for control — the levers compose rather than compete.","they combine"]]],
+ ]},
+ {id:"h",t:"Agent Harnesses",s:"The orchestration layer that turns an LLM into an agent",a:"#6a5cff",b:"#46e0d0",ch:[
+  ["Foundations of the Harness","The system built around the raw model.",[["Horse, harness, rider.","The model is the horse (raw capability), the harness is the scaffold that directs it, the rider is the goal. Most agent quality lives in the harness, not the model.","model / scaffold / goal"],["The harness owns tools, memory, loop, limits.","It decides what tools exist, what's remembered, how the loop runs, and where the hard stops are. These are engineering choices, not model choices.","the harness owns control"],["Simplicity first.","Add orchestration only when a simpler approach demonstrably fails. Complexity is a cost you pay in reliability and debuggability.","earn the complexity"]]],
+  ["The Agent Loop","Think, act, observe, repeat.",[["ReAct interleaves reasoning and action.","The agent reasons about what to do, takes an action via a tool, observes the result, and loops — alternating thought and action rather than planning everything up front.","reason ↔ act"],["The loop manages messages and termination.","It appends tool calls and results to the conversation and decides when to stop — on success, on budget, or on a stop condition. Termination logic is easy to get wrong.","know when to stop"],["Loop detection stops spinning.","Agents can get stuck repeating the same failing action. Detecting cycles and breaking out is essential for robustness.","break the cycle"]]],
+  ["Tools & MCP","The agent's hands on the world.",[["Tools are APIs designed for the model.","Shape tools around how the model reasons — clear names, few arguments, concise returns — not around your database schema.","design for the model"],["Structured errors enable recovery.","When a tool fails, return a structured, descriptive error so the agent can understand and adapt rather than crashing or hallucinating.","fail informatively"],["MCP standardizes how tools plug in.","Implement the Model Context Protocol once and any MCP-aware harness can use your tool — no bespoke glue per agent.","plug in once"]]],
+  ["Context Engineering","Feeding the loop without drowning it.",[["Context is working memory.","The window holds the agent's live state — the task, recent steps, tool results. It's a scarce budget, not infinite scratch space.","scarce budget"],["Compaction and tool-result clearing.","Summarize old turns and drop stale tool outputs to keep the window focused, or the agent drowns in its own history.","prune aggressively"],["Progressive disclosure.","Surface only what the current step needs; fetch more on demand. Don't front-load everything the agent might eventually use.","just-in-time context"]]],
+  ["Memory Architectures","Remembering beyond a single window.",[["Short- vs long-term; episodic/semantic/procedural.","Working memory is the context; long-term memory persists across sessions, split into episodic (events), semantic (facts), and procedural (skills) — borrowed from cognitive science.","four memory types"],["Scratchpads and RAG persist state.","An external notes file or a retrieval store lets the agent record decisions and recall them later, surviving context compaction.","write it down"],["Consolidation turns experience into knowledge.","Periodically compress raw episodic logs into durable, reusable facts and procedures — so the agent gets better over time instead of just accumulating logs.","compress to learn"]]],
+  ["Planning & Decomposition","Breaking a big task into doable pieces.",[["Decompose — don't one-shot.","Hard tasks fail when attempted in a single leap. Break them into ordered sub-goals the agent can tackle and verify one at a time.","split the task"],["Plan-then-execute vs interleaved ReAct.","Sometimes plan fully up front; sometimes plan and act in alternation. Choose based on how predictable the environment is.","two planning styles"],["Re-plan on ground truth.","When reality diverges from the plan (a tool fails, an assumption breaks), revise the plan instead of charging ahead.","adapt to reality"]]],
+  ["Orchestration Patterns","Composing agents and workflows.",[["Five composable patterns.","Prompt chaining, routing, parallelization, orchestrator-workers, and evaluator-optimizer — the building blocks you combine for most agentic systems.","the pattern toolkit"],["Single-agent vs multi-agent.","One capable agent is simpler and cheaper; multiple agents help only when you need genuine parallelism or context isolation worth the overhead.","don't multiply needlessly"],["Supervisor vs swarm.","A supervisor delegates and synthesizes (predictable, a bottleneck); a swarm coordinates peer-to-peer (flexible, harder to control). Topology shapes behavior.","who's in charge"]]],
+  ["Guardrails, Safety & Security","Containing an autonomous system.",[["Budgets and circuit breakers.","Hard caps on tokens, steps, time, and cost bound runaway behavior — non-negotiable for anything autonomous.","bound the run"],["Injection, lethal trifecta, confused deputy.","Untrusted content can hijack the agent; the lethal trifecta enables exfiltration; the confused-deputy problem is an agent misusing its own privileges on an attacker's behalf.","the threat model"],["Least privilege and zero-trust MCP.","Grant minimal tool access, treat every tool result as untrusted input, and verify rather than trust annotations.","trust nothing by default"]]],
+  ["Evaluation & Observability","Knowing the agent actually works.",[["Outcome vs trajectory evals.","Outcome evals check if the final answer is right; trajectory evals check whether the path (tool calls, reasoning) was sound. You need both.","result and path"],["pass@k vs pass^k.","pass@k rewards getting it right in at least one of k tries (capability); pass^k requires all k to succeed (reliability). pass^k is often far lower — the reliability gap.","capability vs reliability"],["Traces and spans debug multi-step runs.","A trace records the whole run; spans capture each step with inputs, outputs, tokens, and latency — so you can find where a failure actually happened.","see every step"]]],
+  ["Production & Deployment","Shipping an agent that stays up.",[["Stateless services + durable session log.","Keep the service stateless and persist conversation/state in a durable store, so any worker can resume and crashes don't lose progress.","persist the state"],["Retries and idempotency.","Tool calls and steps fail; design them to be safely retryable (idempotent) so a retry doesn't double-charge or double-send.","safe to retry"],["Cost/rate control and secrets.","Enforce rate limits and budgets, and keep credentials out of prompts and code — secrets hygiene is part of agent safety.","control cost; guard secrets"]]],
+ ]},
+ {id:"v",t:"Modalities Beyond Text",s:"Vision, speech, generative media & embeddings",a:"#ff6b5e",b:"#42c8e0",ch:[
+  ["Vision Foundations","Teaching machines to see.",[["Images are tensors of pixel intensities.","A color image is a 3-D array (height × width × channels). Everything a vision model does starts from this numeric grid.","H × W × C"],["Four core tasks.","Classification (what is it), detection (where is it), segmentation (which pixels), and generation (make one). Most vision work is a variant of these.","classify/detect/segment/generate"],["CNNs → ViT, transfer learning the default.","Convolutional nets gave way to Vision Transformers at scale; either way, you start from a model pretrained on huge image data and fine-tune.","stand on pretrained backbones"]]],
+  ["Detection & Segmentation","Finding what is where, precisely.",[["One-stage vs two-stage detectors.","Two-stage (R-CNN family) proposes regions then classifies (accurate); one-stage (YOLO) predicts boxes directly in a single pass (fast). Speed–accuracy tradeoff.","YOLO vs R-CNN"],["Semantic, instance, panoptic segmentation.","Semantic labels every pixel by class; instance separates individual objects; panoptic does both. Increasing granularity of 'which pixels are what'.","pixel-level understanding"],["SAM made segmentation promptable.","The Segment Anything Model segments objects from a click or box prompt, zero-shot — a foundation model for segmentation.","prompt to segment"]]],
+  ["Multimodal VLMs","Models that see and talk.",[["CLIP aligns images and text.","Trained on image–caption pairs with a contrastive objective, CLIP places matching images and text near each other in one shared embedding space — enabling zero-shot recognition.","one shared space"],["A vision encoder feeds an LLM.","Modern VLMs (LLaVA-style) connect an image encoder to a language model so it can reason and converse about pixels.","pixels → language model"],["Captioning, VQA, grounding.","VLMs caption images, answer visual questions, and ground phrases to regions — but still hallucinate and miscount, so verify.","describe, answer, locate"]]],
+  ["Speech Recognition (ASR)","Turning sound into text.",[["Waveform → spectrogram → tokens.","Audio is converted to a spectrogram (frequency over time), which the model maps to text tokens. The spectrogram is the workhorse representation.","sound to spectrogram"],["Whisper set a robust baseline.","Trained on huge, diverse audio, Whisper transcribes many languages and accents robustly, becoming a default open ASR model.","robust, multilingual"],["WER, streaming vs batch.","Word Error Rate measures accuracy; streaming ASR transcribes live with low latency, batch processes whole files more accurately. Pick per use case.","measure with WER"]]],
+  ["TTS & Voice Agents","Giving models a natural voice.",[["Acoustic model + vocoder.","Text-to-speech first predicts acoustic features, then a vocoder turns them into a waveform. Modern neural TTS sounds remarkably human.","features → waveform"],["The ASR→LLM→TTS cascade.","A voice agent chains speech recognition, a language model, and speech synthesis. Each stage adds latency, so the pipeline races a budget.","the voice pipeline"],["~300–500 ms latency budget.","Natural conversation needs sub-half-second response; end-to-end speech-to-speech models cut latency by skipping the text round-trip.","fast enough to feel live"]]],
+  ["Generative Foundations","How machines create new media.",[["The generative family.","VAEs, GANs, autoregressive models, normalizing flows, and diffusion — different mechanisms for learning a data distribution and sampling from it.","five ways to generate"],["Generation happens in latent space.","Most generators work in a compressed latent space rather than raw pixels, which is more efficient and gives a smooth space to manipulate.","work in latents"],["Guidance steers; FID scores quality.","Conditioning and guidance push generation toward a prompt; FID measures how close generated images are to real ones.","steer and score"]]],
+  ["GANs","The adversarial generation game.",[["Generator vs discriminator.","Two networks compete: the generator makes fakes, the discriminator judges real vs fake. Their arms race drives both to improve.","the adversarial game"],["Mode collapse is the failure.","A GAN can collapse to producing a few outputs that fool the discriminator, losing diversity — the classic training pathology.","loss of variety"],["StyleGAN shines; diffusion displaced it.","StyleGAN produces stunning faces with controllable style, but for general generation diffusion has largely taken over.","great faces, then surpassed"]]],
+  ["Diffusion & Flow Models","Denoising pure noise into images.",[["Add noise, then learn to reverse it.","Diffusion gradually corrupts data into noise during training, then learns to denoise step by step — generation runs the reverse process from random noise.","noise → image"],["Latent diffusion and DiT scaled it.","Running diffusion in a compressed latent space (Stable Diffusion) and swapping the U-Net for a transformer (DiT) made it scale to billions of parameters.","efficient and scalable"],["Flow matching is the new default.","Flow matching and rectified flow learn straighter paths from noise to data, training faster and sampling in fewer steps — now the default paradigm.","straighter, faster paths"]]],
+  ["Embeddings: The Universal Substrate","Meaning represented as geometry.",[["Embeddings turn anything into vectors.","Text, images, audio, users — all can be mapped to dense vectors where geometric closeness means semantic similarity. The common currency of modern AI.","everything → vectors"],["Cosine similarity + ANN power search.","Compare vectors by cosine similarity and use approximate-nearest-neighbor indexes to search billions of them fast — the engine behind semantic search and RAG.","fast similarity search"],["Joint embeddings bridge modalities.","CLIP-style training puts different modalities in one space, so you can search images with text or vice versa.","cross-modal search"]]],
+  ["The Unified Multimodal Picture","Everything becomes tokens and vectors.",[["Encoders understand; generators create.","One axis of the field turns inputs into representations (encoders); the other turns representations into new media (generators). Most systems combine both.","understand vs create"],["Two generation paradigms.","Autoregressive models predict tokens one at a time; diffusion models denoise in parallel. Much of generative AI is one of these two.","autoregressive vs diffusion"],["Multimodal agents — and deepfakes.","Combining modalities enables powerful agents, but the same tech makes convincing deepfakes — watermarking and provenance are the shared safety problem.","power and its misuse"]]],
+ ]},
+ {id:"o",t:"Systems / MLOps",s:"Serving, deployment, monitoring, cost, eval & observability",a:"#5a9eff",b:"#ffb454",ch:[
+  ["Serving Fundamentals","From a pile of weights to a live API.",[["Inference dominates lifetime cost.","Training happens once; inference runs millions of times. Most of a model's real-world cost and engineering is in serving, not training.","serving is the bulk"],["Prefill compute-bound, decode memory-bound.","Processing the prompt saturates compute; generating tokens is limited by memory bandwidth reading the KV cache. This split drives every optimization.","opposite bottlenecks"],["vLLM, TGI, SGLang are the runtimes.","Don't build serving from scratch — these production runtimes package batching, KV paging, and caching for you.","use a real runtime"]]],
+  ["Inference Optimization","Making serving fast and cheap.",[["Continuous batching ~23× over static.","Adding and evicting requests every step keeps the GPU saturated instead of waiting for the slowest sequence — a massive throughput win.","never idle the GPU"],["PagedAttention removes fragmentation.","Storing the KV cache in fixed pages (like OS virtual memory) eliminates fragmentation, freeing memory for bigger batches.","page the KV cache"],["Speculative decoding and chunked prefill.","A small model drafts tokens a big one verifies in parallel; chunked prefill interleaves long prompts with decode to avoid stalls.","draft-verify, interleave"]]],
+  ["GPU Utilization & Hardware","Using the accelerator fully.",[["KV cache grows with batch × context.","Memory use scales with how many sequences and how long their context — often the binding constraint at long context lengths.","the memory wall"],["Memory-bound vs compute-bound regimes.","Knowing which regime you're in tells you which fix helps: more FLOPs for compute-bound prefill, less memory traffic for memory-bound decode.","diagnose the regime"],["Quantization frees memory.","FP8 KV cache and INT4 weights cut memory and bandwidth, letting you fit bigger batches and longer contexts on the same GPU.","fewer bits, more room"]]],
+  ["Latency & Throughput","The user experience and the bill.",[["TTFT vs ITL.","Time-to-first-token (driven by prefill) sets perceived responsiveness; inter-token latency (driven by decode) sets the 'typing speed'. Optimize them separately.","first token vs typing speed"],["Report p50/p95/p99.","Averages hide the tail; percentiles expose the slow requests users actually feel and SLOs are written against.","mind the tail"],["Stream tokens to cut perceived latency.","Showing output as it generates makes the app feel fast even if total time is unchanged — the cheapest UX win.","stream it"]]],
+  ["Deployment & Versioning","Shipping changes safely.",[["Version model, prompts, data, config together.","Reproducibility means pinning everything that shapes output, not just code — a prompt change is a deployment.","version everything"],["Canary, blue-green, shadow.","Roll out to a small slice first, keep the old version warm for instant rollback, or shadow live traffic to compare — all limit blast radius.","roll out safely"],["An eval gate blocks regressions.","Run evals in CI and block the release if quality drops below baseline — the LLM equivalent of unit tests.","gate on quality"]]],
+  ["Monitoring & Drift Detection","Production never sits still.",[["LLMs fail silently.","They return fluent, plausible, wrong answers without errors — so you must actively measure output quality, not just uptime.","silent wrong answers"],["Model, data, concept, embedding drift.","The provider's model changes, inputs shift, the right answer changes, or embeddings move — many distinct ways quality decays over time.","many kinds of drift"],["Providers update models under you.","An API model can change overnight and regress your prompts with zero changes on your side — pin versions and run scheduled evals.","the moving floor"]]],
+  ["Cost Engineering","Usage scales directly with success.",[["Semantic caching skips redundant calls.","Cache by meaning, not exact match, so similar queries reuse a cached answer instead of paying for another generation.","cache by meaning"],["Model routing: easy→cheap, hard→frontier.","A router sends simple requests to a small cheap model and only the hard ones to the expensive model, cutting cost with little quality loss.","match model to difficulty"],["Right-size model and hardware.","Pick the smallest model and cheapest GPU that meet your quality bar — over-provisioning is the most common silent cost leak.","smallest that passes"]]],
+  ["Eval Infrastructure","Trust earned through measurement.",[["Evaluation-first beats ship-and-pray.","You can't improve what you don't measure; systematic evals are the early-warning system for quality.","measure first"],["Golden datasets + regression gating.","A curated benchmark of inputs and known-good outputs, run in CI to catch the 'fixed one thing, broke ten' regressions.","the benchmark of record"],["LLM-as-judge — calibrate it.","Using a model to score outputs scales evaluation but carries position/verbosity/self-preference biases — calibrate against human labels.","powerful but biased"]]],
+  ["Observability","Seeing inside a non-deterministic system.",[["Monitoring says THAT; observability says WHY.","Monitoring alerts when a metric breaks; observability lets you drill into any request to understand the cause — essential for multi-step systems.","alert vs explain"],["Traces and spans capture every step.","A trace is one request; spans are its steps (prompt, retrieval, tool, completion) with inputs, outputs, tokens, latency — so you can localize failures.","record the steps"],["Attribute tokens and cost per span.","Tie spend to each step, feature, and user to find the expensive path and justify caching/routing work.","cost per step"]]],
+  ["The Production Lifecycle","The loop that never stops.",[["A seven-stage continuous lifecycle.","Use-case selection → prompt versioning → deploy → monitor → evaluate → optimize cost → govern. It's a loop you operate, not a line you finish.","operate the loop"],["LLMOps = MLOps + new muscles.","It inherits pipelines, versioning, and CI/CD, and adds prompt management, non-deterministic eval, token cost, drift, and tracing.","MLOps plus LLM concerns"],["Governance and incident response.","Audit logs, access control, privacy, and a plan for when things go wrong — accountability is part of production.","stay accountable"]]],
+ ]},
+ {id:"r",t:"Frontier / Research Edge",s:"RL, reasoning, multi-agent, long-horizon, continual learning",a:"#c062ff",b:"#ffd166",ch:[
+  ["RL Fundamentals","Learning from reward and interaction.",[["Agent, environment, reward in an MDP.","Reinforcement learning formalizes an agent taking actions in an environment to maximize reward, modeled as a Markov Decision Process (states, actions, transitions, reward, discount).","the MDP frame"],["Policy, value, return; explore vs exploit.","A policy maps states to actions; value estimates future reward; the agent must balance exploiting known rewards against exploring for better ones.","the core tradeoff"],["Credit assignment for delayed reward.","When reward comes long after the action that earned it, figuring out which action deserves credit is the hard problem RL must solve.","who earned the reward"]]],
+  ["Policy Gradients & PPO","Optimizing the policy directly.",[["Push up high-reward actions.","Policy-gradient methods adjust the policy to increase the probability of actions that led to high reward — directly optimizing behavior, which suits huge action spaces like tokens.","optimize behavior directly"],["Advantage (Q − V) slashes variance.","Using how much better an action was than average (the advantage), rather than raw reward, dramatically reduces the noise in the gradient.","better-than-average signal"],["PPO's clipped objective keeps it stable.","Proximal Policy Optimization clips how far the policy can move in one update, preventing the destructive jumps that wreck RL training.","clip to stay stable"]]],
+  ["Model-Based RL & World Models","Planning inside a learned model.",[["Learn dynamics, then plan.","Model-based RL learns how the environment behaves and plans within that model — far more sample-efficient than learning purely from real interaction.","plan, don't just react"],["World models let agents imagine.","A learned simulator lets an agent roll out and evaluate plans 'in its head' before acting, learning from dreamed experience.","imagine rollouts"],["MuZero planned without the rules.","MuZero learned a model of only what matters for value and planned superhuman play without being told the game's rules.","learned planning"]]],
+  ["RL for LLMs: RLHF → RLVR","How modern reasoning is trained.",[["The LLM is a policy.","Cast generation as RL: the model is the policy, tokens are actions, and a reward scores the output — letting RL shape behavior beyond what pretraining gave.","tokens as actions"],["RLVR uses verifiable rewards.","Reinforcement Learning with Verifiable Rewards replaces a learned reward model with a deterministic checker (does the code run, is the math right) — a clean, hard-to-game signal.","checkable reward"],["GRPO and R1 — reasoning from pure RL.","Group-relative optimization (no critic network) plus verifiable rewards let DeepSeek-R1 develop reasoning largely through RL, with chain-of-thought emerging on its own.","reasoning emerges"]]],
+  ["Reasoning & Test-Time Compute","Thinking longer at inference.",[["A new scaling axis.","Beyond training bigger, you can spend more compute at inference — letting the model think longer — to get better answers. The defining shift of the reasoning-model era.","scale at inference"],["Trained CoT beats prompted CoT.","Prompting 'think step by step' helps any model a little; training the model to reason via RL bakes it into the weights for a qualitative jump.","reasoning in the weights"],["Self-consistency, best-of-N, distillation.","Sample many reasoning paths and vote, pick the best of N with a verifier, or distill a big model's reasoning traces into a small one.","spend compute wisely"]]],
+  ["Multi-Agent Systems","Many minds, emergent behavior.",[["Isolation, specialization, parallelism.","Multiple agents give each a clean context, let you specialize roles, and run work in parallel — the upside that justifies the overhead.","why use many"],["Coordination can emerge.","From simple rewards, agents can develop cooperation, signaling, tool use, even deception — coordination that was never explicitly programmed.","emergent strategy"],["Often over-applied.","Multi-agent setups multiply cost and add coordination failures; frequently a single well-designed agent or workflow beats them.","don't over-reach"]]],
+  ["Long-Horizon Autonomy","Acting coherently over many steps.",[["Error compounds (~pⁿ).","If each step succeeds with probability p, an n-step task succeeds with ~pⁿ — small per-step errors compound into near-certain long-run failure.","the compounding problem"],["Decompose, externalize, re-plan.","Break the goal into sub-goals, store the plan and progress outside the context so it survives, and revise when reality diverges.","structure beats drift"],["Self-monitor, backtrack, escalate.","Robust agents detect loops and dead-ends, verify intermediate results, and back out or hand off to a human rather than charging on.","graceful failure"]]],
+  ["Continual Learning","Learning without forgetting.",[["Today's models are frozen.","After training, an LLM doesn't learn from interaction — its knowledge has a cutoff and it can't durably acquire new skills on the job.","frozen after training"],["Catastrophic forgetting.","Naively training on new data overwrites old knowledge; gradients for the new task destroy the old. Why you can't just keep fine-tuning forever.","new erases old"],["Stability vs plasticity.","A system must be plastic enough to learn yet stable enough to retain — every continual-learning method is a way to balance this tension.","the core dilemma"]]],
+  ["Memory Research","Durable, structured agent memory.",[["Working, episodic, semantic, procedural.","Mature agents layer live context with persistent stores of events, facts, and skills — borrowing the structure of human memory.","layered memory"],["Write-path filtering is hard.","Deciding what's worth storing is as difficult as retrieving it well — store everything and retrieval drowns; store too little and the agent forgets.","what to remember"],["Open problems.","Continual consolidation, causally-grounded (not just similarity) retrieval, trustworthy reflection that doesn't memorize hallucinations, and learned forgetting.","the research frontier"]]],
+  ["The State of the Edge","Where all of this is heading.",[["RL → RLVR → reasoning → agents.","The threads connect: reinforcement learning applied to LLMs produced reasoning models, which compose into agents — gated by what's unsolved.","one connected arc"],["The honest path.","How models work → use (prompting/context) → RAG → tools → harness → evals → safety → MLOps, then branch into a modality or the research edge.","sequence, not buffet"],["Leverage = evals + context + safety.","Models are commoditizing; the durable skill is the engineering around them — rigorous evaluation, disciplined context, and safety.","where the edge is"]]],
+ ]},
+];
+
+const CARDS=[
+ ["Gradient descent","Iteratively step parameters opposite the loss gradient to minimize error.","f"],["Bias-variance tradeoff","Balancing underfitting (high bias) against overfitting (high variance).","f"],["KL divergence","A measure of how one probability distribution differs from another.","f"],["Precision vs recall","Precision = correct of those predicted positive; recall = correct of all actual positives.","f"],["Data leakage","Information from outside the training set sneaking in, inflating scores.","f"],
+ ["Self-attention","Mechanism letting every token weigh every other to build context.","m"],["Backpropagation","Using the chain rule to compute gradients through every layer.","m"],["RLHF","Aligning a model to human preferences via a reward model and PPO.","m"],["Quantization","Representing weights/activations in lower precision (e.g. INT4) to save memory.","m"],["Scaling laws","Loss falls predictably as parameters, data and compute grow.","m"],["KV cache","Stored past keys/values so the model doesn't recompute them each step.","m"],
+ ["Chain-of-thought","Prompting a model to reason step by step before answering.","a"],["RAG","Retrieve relevant documents, then generate grounded in them.","a"],["Hybrid search","Combining vector (semantic) and keyword (lexical) retrieval.","a"],["Function calling","Letting a model invoke typed tools/APIs with structured arguments.","a"],["Constrained decoding","Forcing generation to conform to a schema/grammar — guaranteed-valid output.","a"],["Prompt injection","Malicious input that hijacks a model's instructions.","a"],
+ ["The agent loop","Plan, act, observe, repeat until the goal or a limit is hit.","h"],["Lethal trifecta","Private data + untrusted content + external comms = exfiltration risk.","h"],["pass^k vs pass@k","pass^k needs all k runs to succeed; pass@k needs at least one — reliability vs capability.","h"],["Circuit breaker","A hard cap (tokens/steps/time) that halts a runaway agent.","h"],
+ ["CLIP","A model aligning images and text in one shared embedding space.","v"],["Diffusion model","Generates by learning to reverse a gradual noising process.","v"],["Mode collapse","A GAN failure where the generator produces little variety.","v"],["WER","Word Error Rate — the standard ASR accuracy metric.","v"],["Embedding","A dense vector capturing meaning so similarity becomes geometry.","v"],
+ ["Continuous batching","Adding/removing requests every step to keep the GPU saturated.","o"],["PagedAttention","Paging the KV cache into blocks to eliminate memory fragmentation.","o"],["TTFT","Time-To-First-Token — latency until output begins (prefill-bound).","o"],["Model drift","Quality degrading as data, concepts, or the provider's model shift.","o"],["Golden dataset","A curated benchmark of inputs + known-good outputs for regression gating.","o"],
+ ["MDP","Markov Decision Process: states, actions, transitions, reward, discount.","r"],["PPO","Proximal Policy Optimization — stable RL via a clipped objective.","r"],["RLVR","RL with Verifiable Rewards — a checker gives binary correctness, no reward model.","r"],["Test-time compute","Spending more inference compute (longer CoT, search) to think harder.","r"],["Catastrophic forgetting","New training overwriting previously learned knowledge.","r"],
+];
+
+const QUIZ=[
+ ["f","What does the bias-variance tradeoff describe?",["Speed vs memory","Underfitting vs overfitting","Train vs test split","Precision vs recall"],1,"High bias underfits; high variance overfits. You balance the two."],
+ ["f","Accuracy is misleading when…",["Data is balanced","Classes are heavily imbalanced","You use cross-validation","The model is linear"],1,"On imbalanced data a trivial majority guess scores high — use precision/recall/F1."],
+ ["f","Data leakage causes…",["Slower training","Overly optimistic scores that collapse in production","Vanishing gradients","Class imbalance"],1,"Leaked future/target info inflates validation scores deceptively."],
+ ["m","Self-attention lets a token…",["Ignore other tokens","Weigh the relevance of every other token","Only see the previous token","Skip the feed-forward layer"],1,"Attention computes weighted relationships across all tokens (Q·K → V)."],
+ ["m","Pretraining's objective is usually…",["Classification","Next-token prediction (self-supervised)","Clustering","Reward maximization"],1,"Models learn by predicting the next token over massive text."],
+ ["m","Quantization primarily…",["Improves accuracy","Reduces memory/precision to speed and shrink models","Adds parameters","Replaces attention"],1,"Lower precision (e.g. INT4) cuts memory and speeds memory-bound decode."],
+ ["a","RAG mainly reduces…",["Latency","Hallucination by grounding in retrieved data","Model size","Token cost"],1,"Grounding answers in retrieved documents curbs fabrication."],
+ ["a","The most reliable way to guarantee schema-valid output is…",["Asking nicely in the prompt","Constrained decoding","A bigger model","More few-shot examples"],1,"Constrained decoding restricts generation to the grammar/schema."],
+ ["a","The 'lethal trifecta' combines private data, untrusted content, and…",["A large model","External communication","Fine-tuning","Vector search"],1,"Those three together enable data exfiltration via injection."],
+ ["h","ReAct interleaves…",["Two models","Reasoning and action","Prompt and schema","Train and test"],1,"The agent reasons, acts via a tool, observes, and repeats."],
+ ["h","pass^k differs from pass@k because it…",["Needs one success","Requires all k runs to succeed","Ignores failures","Measures latency"],1,"pass^k demands every run succeed — a strict reliability bar."],
+ ["h","A circuit breaker in an agent…",["Adds tools","Caps tokens/steps/time to stop runaway behavior","Improves accuracy","Stores memory"],1,"Hard budgets bound resource use and prevent infinite loops."],
+ ["v","CLIP is best known for…",["Object detection","Aligning images and text in one space","Speech synthesis","Denoising"],1,"Contrastive training puts images and captions in a shared embedding space."],
+ ["v","A diffusion model generates by…",["Competing two networks","Reversing a gradual noising process","Recurrence","Tree search"],1,"It learns to denoise from noise into a sample."],
+ ["v","An embedding turns data into…",["A label","A dense vector where similarity is geometric","A token id","A gradient"],1,"Embeddings map inputs to vectors so meaning becomes distance/angle."],
+ ["o","Continuous batching improves on static batching by…",["Waiting for the slowest request","Adding/evicting requests every step","Removing the KV cache","Lowering precision"],1,"Finished sequences free their slot immediately, saturating the GPU."],
+ ["o","TTFT is dominated by…",["Decode","Prefill and queueing","Tokenization","The optimizer"],1,"Time-to-first-token reflects prefill plus queue time."],
+ ["o","You should report latency as…",["The mean only","p50/p95/p99 percentiles","The max only","One sample"],1,"Percentiles expose the tail users actually feel."],
+ ["r","RLVR replaces the learned reward model with…",["A bigger model","A deterministic verifier giving binary correctness","Human labels only","A diffusion step"],1,"A checker/compiler scores correctness directly — no reward model."],
+ ["r","Test-time compute is a scaling axis that…",["Makes the model bigger","Spends more inference compute to think harder","Shrinks the model","Removes the prompt"],1,"Reasoning models 'think longer' at inference for better answers."],
+ ["r","Catastrophic forgetting is when a model…",["Trains faster","Overwrites old knowledge while learning new tasks","Uses less memory","Stops generating"],1,"Naive new training destroys prior knowledge — the core continual-learning obstacle."],
+ ["r","PPO keeps training stable via…",["Removing rewards","A clipped objective limiting update size","Q-learning","Static batching"],1,"Clipping the policy ratio prevents destructive over-large updates."],
+];
+
+const ARENA=[
+ {cat:"Frontier Labs",color:"#00f0ff",desc:"Announcements straight from the model builders.",links:[["Anthropic — News","anthropic.com/news","https://www.anthropic.com/news"],["OpenAI — News","openai.com/news","https://openai.com/news/"],["Google DeepMind — Blog","deepmind.google/blog","https://deepmind.google/discover/blog/"],["Meta AI — Blog","ai.meta.com/blog","https://ai.meta.com/blog/"],["Mistral AI — News","mistral.ai/news","https://mistral.ai/news/"],["xAI — News","x.ai/news","https://x.ai/news"]]},
+ {cat:"Research & Papers",color:"#39ffb0",desc:"Where the work lands before the press cycle.",links:[["arXiv — cs.LG","arxiv.org/list/cs.LG","https://arxiv.org/list/cs.LG/recent"],["arXiv — cs.CL","arxiv.org/list/cs.CL","https://arxiv.org/list/cs.CL/recent"],["Hugging Face — Papers","huggingface.co/papers","https://huggingface.co/papers"],["Papers with Code","paperswithcode.com","https://paperswithcode.com/"],["Semantic Scholar","semanticscholar.org","https://www.semanticscholar.org/"]]},
+ {cat:"Leaderboards · The Arena",color:"#c062ff",desc:"Live capability rankings — the actual arena.",links:[["LMArena","lmarena.ai","https://lmarena.ai/"],["Artificial Analysis","artificialanalysis.ai","https://artificialanalysis.ai/"],["HF Open LLM Leaderboard","huggingface.co/spaces","https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard"],["SWE-bench","swebench.com","https://www.swebench.com/"],["Epoch AI","epoch.ai","https://epoch.ai/"]]},
+ {cat:"Newsletters & Analysis",color:"#ffb454",desc:"Tier-1 synthesis worth your inbox.",links:[["Import AI — Jack Clark","jack-clark.net","https://jack-clark.net/"],["The Batch — DeepLearning.AI","deeplearning.ai/the-batch","https://www.deeplearning.ai/the-batch/"],["Ahead of AI — Raschka","sebastianraschka.com","https://magazine.sebastianraschka.com/"],["Simon Willison","simonwillison.net","https://simonwillison.net/"],["AI News — smol.ai","news.smol.ai","https://news.smol.ai/"]]},
+ {cat:"Communities & Aggregators",color:"#ff2fd0",desc:"Where signal surfaces first.",links:[["Hacker News","news.ycombinator.com","https://news.ycombinator.com/"],["r/LocalLLaMA","reddit.com/r/LocalLLaMA","https://www.reddit.com/r/LocalLLaMA/"],["r/MachineLearning","reddit.com/r/MachineLearning","https://www.reddit.com/r/MachineLearning/"],["Hugging Face — Models","huggingface.co/models","https://huggingface.co/models"]]},
+];
+
+let USER="", STATE={read:{},known:{},notes:{},scores:[]}, DKEY="";
+const mem={};
+function lsGet(k){ try{return localStorage.getItem(k);}catch(e){return k in mem?mem[k]:null;} }
+function lsSet(k,v){ try{localStorage.setItem(k,v);}catch(e){mem[k]=v;} }
+function loadState(){ DKEY="aieng_neon2::"+USER.toLowerCase();
+  try{STATE=JSON.parse(lsGet(DKEY))||{};}catch(e){STATE={};}
+  STATE.read=STATE.read||{};STATE.known=STATE.known||{};STATE.notes=STATE.notes||{};STATE.scores=STATE.scores||[];STATE.learned=STATE.learned||{}; }
+function save(){ lsSet(DKEY,JSON.stringify(STATE)); }
+
+let CH=[];
+PARTS.forEach((p,pi)=>p.ch.forEach((c,ci)=>{ CH.push({gid:CH.length+1,pid:p.id,part:p,pi,ci,id:p.id+":"+ci,title:c[0],blurb:c[1],ideas:c[2]}); }));
+const chById=id=>CH.find(c=>c.id===id);
+const partChaps=pid=>CH.filter(c=>c.pid===pid);
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+function icons(){ try{ if(window.lucide&&lucide.createIcons) lucide.createIcons(); }catch(e){} }
+const lessonKey=(cid,i)=>cid+"#"+i;
+function chapLearned(c){ return c.ideas.reduce((n,_,i)=>n+(STATE.learned[lessonKey(c.id,i)]?1:0),0); }
+function chapDone(c){ return chapLearned(c)===c.ideas.length; }
+
+function applyTheme(){ const t=lsGet("aieng_theme")||"dark"; document.documentElement.setAttribute("data-theme",t);
+  document.querySelectorAll("#themeBtn i,#gtheme i").forEach(i=>i.setAttribute("data-lucide",t==="dark"?"sun":"moon")); icons(); }
+function toggleTheme(){ const cur=document.documentElement.getAttribute("data-theme"); lsSet("aieng_theme",cur==="dark"?"light":"dark"); applyTheme(); }
+
+const TABS=[["library","Library","layout-grid"],["cards","Cards","layers"],["quiz","Quiz","clipboard-check"],["notes","Notes","notebook-pen"],["arena","Arena","newspaper"],["dash","Progress","trophy"]];
+let CUR="library", NAV=[];
+function buildChrome(){
+  document.getElementById("tabs").innerHTML=TABS.map(t=>`<button data-t="${t[0]}" onclick="go('${t[0]}')"><i data-lucide="${t[2]}"></i><span>${t[1]}</span></button>`).join("");
+  document.getElementById("who").innerHTML=`<div class="av">${(USER||"?")[0].toUpperCase()}</div><button class="out" onclick="signOut()">Exit</button>`;
+  document.getElementById("themeBtn").onclick=toggleTheme;
+  document.getElementById("hbrand").onclick=()=>go("library");
+  document.getElementById("backBtn").onclick=goBack;
+  applyTheme(); icons();
+}
+function signOut(){ lsSet("aieng_user",""); location.reload(); }
+function go(tab,arg){
+  if(!(NAV.length && NAV[NAV.length-1].tab===tab && NAV[NAV.length-1].arg===arg)){ NAV.push({tab,arg}); if(NAV.length>50)NAV.shift(); }
+  CUR=tab;
+  const back=document.getElementById("backBtn"); if(back) back.hidden=(tab==="library"&&!arg);
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
+  document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===tab));
+  ({library:renderLibrary,reader:()=>renderReader(arg),cards:renderCards,quiz:renderQuiz,notes:renderNotes,arena:renderArena,dash:renderDash}[tab]||renderLibrary)();
+  document.getElementById("v-"+tab).classList.add("on");
+  window.scrollTo(0,0); icons();
+}
+function goBack(){ NAV.pop(); const prev=NAV.pop(); if(prev) go(prev.tab,prev.arg); else go("library"); }
+
+function partPct(pid){ const cs=partChaps(pid),d=cs.filter(chapDone).length; return {d,t:cs.length,pct:Math.round(100*d/cs.length)}; }
+function renderLibrary(){
+  const done=CH.filter(chapDone).length, learnedLessons=CH.reduce((n,c)=>n+chapLearned(c),0), totalLessons=CH.reduce((n,c)=>n+c.ideas.length,0);
+  let h=`<div class="hero"><div class="eyebrow">The Complete Curriculum</div>
+    <h2 class="glow">AI Engineering, end&#8209;to&#8209;end</h2>
+    <p>Seven parts, 70 chapters — ordered the honest way: foundations → how models work → the application layer → agent harnesses → modalities → systems/MLOps → the research frontier.</p>
+    <div class="statbar">
+      <div class="stat"><div class="v">${done}/70</div><div class="l">Chapters mastered</div></div>
+      <div class="stat"><div class="v">${learnedLessons}/${totalLessons}</div><div class="l">Lessons learned</div></div>
+      <div class="stat"><div class="v">${CARDS.length}</div><div class="l">Flashcards</div></div>
+      <div class="stat"><div class="v">${QUIZ.length}</div><div class="l">Quiz items</div></div>
+    </div></div>
+    <div class="banner"><b>Tap any lesson to open it</b> — read the full explanation, then hit the checkbox to mark it learned. A chapter rings green once every lesson in it is checked.</div>`;
+  PARTS.forEach((p,pi)=>{
+    const pr=partPct(p.id);
+    h+=`<div class="part" id="pt-${p.id}" style="--pa:${p.a};--pb:${p.b}">
+      <div class="part-head" onclick="togglePart('${p.id}')">
+        <div class="part-spine"></div><div class="part-no">${pi+1}</div>
+        <div><h3>${esc(p.t)}</h3><p>${esc(p.s)}</p></div>
+        <div class="part-meta"><span class="pill">${p.ch.length} ch</span>
+          <div class="ring" style="background:conic-gradient(${p.a} ${pr.pct}%,var(--line) 0)"><i>${pr.pct}%</i></div>
+          <span class="chev"><i data-lucide="chevron-right"></i></span></div>
+      </div><div class="chapters">`;
+    partChaps(p.id).forEach(c=>{ const lc=chapLearned(c),lt=c.ideas.length; h+=`<div class="chap" onclick="go('reader','${c.id}')">
+      <div class="cn">CH ${c.gid}</div>
+      <div class="ct"><b>${esc(c.title)}</b><span>${esc(c.blurb)}</span></div>
+      <div class="cr"><div class="mini"><i style="width:${Math.round(100*lc/lt)}%"></i></div>${chapDone(c)?'<i data-lucide="check" style="color:var(--good)"></i>':lc+'/'+lt}</div></div>`; });
+    h+=`</div></div>`;
+  });
+  h+=foot();
+  document.getElementById("v-library").innerHTML=h; icons();
+}
+function togglePart(id){ document.getElementById("pt-"+id).classList.toggle("open"); icons(); }
+
+function renderReader(id){
+  const c=id?chById(id):CH[0]; if(!c){go("library");return;}
+  const i=CH.indexOf(c),prev=CH[i-1],next=CH[i+1];
+  let h=`<div class="reader" style="--la:${c.part.a}">
+    <div class="rtop"><span class="crumb">${esc(c.part.t)} · CH ${c.gid} of 70</span>
+      <span class="pill" style="border-color:${c.part.a};color:${c.part.a}">Part ${c.pi+1}</span>
+      <span class="pill" id="cdone">${chapLearned(c)}/${c.ideas.length} learned</span></div>
+    <h2>${esc(c.title)}</h2><p class="blurb">${esc(c.blurb)}</p>
+    <p class="lhint"><i data-lucide="hand-pointer"></i> Tap a lesson to expand it · check the box to mark it learned</p>`;
+  c.ideas.forEach((t,idx)=>{ const lk=lessonKey(c.id,idx),on=!!STATE.learned[lk];
+    h+=`<div class="lesson${on?' learned':''}" id="les-${idx}">
+      <div class="lhead" onclick="toggleLesson(${idx})">
+        <button class="ltoggle" onclick="event.stopPropagation();markLearned('${c.id}',${idx})"><i data-lucide="check"></i></button>
+        <div class="ltitle">${esc(t[0])}</div>
+        <span class="lchev"><i data-lucide="chevron-down"></i></span>
+      </div>
+      <div class="lbody"><div class="lbin">${esc(t[1])}${t[2]?`<br><span class="tag">${esc(t[2])}</span>`:""}</div></div>
+    </div>`; });
+  h+=`<div class="notebox"><label><i data-lucide="pencil"></i> Chapter notes</label>
+      <textarea id="cnote" placeholder="Notes for this chapter — saved automatically.">${esc(STATE.notes[c.id]||"")}</textarea></div>
+    <div class="rnav"><button class="btn" onclick="go('library')"><i data-lucide="arrow-left"></i> Library</button>
+      <button class="btn" onclick="cardsFor('${c.pid}')"><i data-lucide="layers"></i> Cards</button>
+      <button class="btn" onclick="quizFor('${c.pid}')"><i data-lucide="clipboard-check"></i> Quiz part</button>
+      <div class="sp"></div>
+      <button class="btn pri" onclick="markAll('${c.id}')"><i data-lucide="check-check"></i> Mark all learned</button></div>
+    <div class="rnav">${prev?`<button class="btn sm" onclick="go('reader','${prev.id}')"><i data-lucide="arrow-left"></i> CH ${prev.gid}</button>`:'<span></span>'}
+      <div class="sp"></div>
+      ${next?`<button class="btn sm" onclick="go('reader','${next.id}')">CH ${next.gid} <i data-lucide="arrow-right"></i></button>`:''}</div></div>`;
+  document.getElementById("v-reader").innerHTML=h;
+  const firstOpen=c.ideas.findIndex((_,idx)=>!STATE.learned[lessonKey(c.id,idx)]);
+  const openIdx=firstOpen<0?0:firstOpen; const el=document.getElementById("les-"+openIdx); if(el) el.classList.add("open");
+  document.getElementById("cnote").addEventListener("input",e=>{STATE.notes[c.id]=e.target.value;save();});
+  icons();
+}
+function toggleLesson(idx){ const el=document.getElementById("les-"+idx); if(el) el.classList.toggle("open"); icons(); }
+function markLearned(cid,idx){ const lk=lessonKey(cid,idx); STATE.learned[lk]=!STATE.learned[lk]; if(!STATE.learned[lk])delete STATE.learned[lk]; save();
+  const c=chById(cid); const el=document.getElementById("les-"+idx); if(el) el.classList.toggle("learned",!!STATE.learned[lk]);
+  const cd=document.getElementById("cdone"); if(cd) cd.textContent=chapLearned(c)+"/"+c.ideas.length+" learned"; icons(); }
+function markAll(cid){ const c=chById(cid); const all=c.ideas.every((_,i)=>STATE.learned[lessonKey(cid,i)]);
+  c.ideas.forEach((_,i)=>{ const lk=lessonKey(cid,i); if(all)delete STATE.learned[lk]; else STATE.learned[lk]=true; }); save(); renderReader(cid); }
+
+let CSET=[],CI=0;
+function cardsFor(pid){ go("cards"); document.getElementById("cPart").value=pid; rebuildCards(); }
+function renderCards(){
+  document.getElementById("v-cards").innerHTML=`<div class="hero"><div class="eyebrow">Active Recall</div><h2 class="glow">Flashcards</h2>
+    <p>Curated key terms across every part. Filter, flip, and mark what you know.</p></div>
+    <div class="controls">
+      <select id="cPart" onchange="rebuildCards()"><option value="*">All parts</option>${PARTS.map((p,i)=>`<option value="${p.id}">Part ${i+1} · ${esc(p.t)}</option>`).join("")}</select>
+      <select id="cFilt" onchange="rebuildCards()"><option value="all">All cards</option><option value="unknown">Only unknown</option></select>
+      <button class="btn sm" onclick="shuf()"><i data-lucide="shuffle"></i> Shuffle</button>
+    </div><div id="cArea"></div>`;
+  rebuildCards();
+}
+function rebuildCards(){ const p=document.getElementById("cPart").value,f=document.getElementById("cFilt").value;
+  let s=CARDS.map((c,i)=>({term:c[0],def:c[1],pid:c[2],key:"c"+i})).filter(c=>p==="*"||c.pid===p);
+  if(f==="unknown")s=s.filter(c=>!STATE.known[c.key]); CSET=s;CI=0;drawCard(); }
+function shuf(){ CSET=shuffle(CSET);CI=0;drawCard(); }
+function drawCard(){ const a=document.getElementById("cArea"); if(!a)return;
+  if(!CSET.length){a.innerHTML=`<div class="empty">No cards in this filter.</div>`;return;}
+  const c=CSET[CI],k=!!STATE.known[c.key],pt=PARTS.find(p=>p.id===c.pid);
+  a.innerHTML=`<div class="card3d"><div class="flip" id="flip" onclick="this.classList.toggle('f')">
+      <div class="face front" style="--acc:${pt.a}"><div class="lab">Term · ${esc(pt.t)}</div><div class="term">${esc(c.term)}</div><div class="lab" style="margin:14px 0 0;color:var(--dim)">tap to flip</div></div>
+      <div class="face back"><div class="lab">Definition</div><div class="def">${esc(c.def)}</div></div></div></div>
+    <div class="cardbar"><button class="btn sm" onclick="step(-1)"><i data-lucide="arrow-left"></i></button>
+      <button class="btn sm ${k?'':'pri'}" onclick="known('${c.key}')">${k?'<i data-lucide="check"></i> Known':'Mark known'}</button>
+      <button class="btn sm" onclick="step(1)"><i data-lucide="arrow-right"></i></button></div>
+    <div class="cprog">${CI+1} / ${CSET.length} · ${CSET.filter(x=>STATE.known[x.key]).length} known</div>`;
+  icons();
+}
+function step(d){ CI=(CI+d+CSET.length)%CSET.length; drawCard(); }
+function known(k){ STATE.known[k]=!STATE.known[k]; if(!STATE.known[k])delete STATE.known[k]; save(); setTimeout(()=>step(1),160); }
+
+let EXAM=null;
+function quizFor(pid){ go("quiz"); document.getElementById("qScope").value=pid; startQuiz(); }
+function renderQuiz(){
+  if(EXAM){drawExam();return;}
+  const last=STATE.scores.slice(-3).reverse();
+  document.getElementById("v-quiz").innerHTML=`<div class="hero"><div class="eyebrow">Test Yourself</div><h2 class="glow">Assessment</h2>
+    <p>Multiple-choice, pass line 75%. Option order is shuffled every attempt, so you can't memorize positions.</p></div>
+    <div class="controls"><select id="qScope"><option value="*">All parts</option>${PARTS.map((p,i)=>`<option value="${p.id}">Part ${i+1} · ${esc(p.t)}</option>`).join("")}</select>
+      <button class="btn pri" onclick="startQuiz()"><i data-lucide="play"></i> Start</button></div>
+    ${last.length?`<h4 style="margin:22px 0 8px">Recent</h4>`+last.map(s=>`<div class="brk"><div class="bn">${esc(s.label)}</div><div class="bar"><i style="width:${s.pct}%;background:${s.pct>=75?'var(--good)':'var(--warn)'}"></i></div><div class="bv" style="color:${s.pct>=75?'var(--good)':'var(--warn)'}">${s.pct}%</div></div>`).join(""):""}${foot()}`;
+}
+function startQuiz(){
+  const sc=document.getElementById("qScope").value;
+  let pool=QUIZ.map(q=>({pid:q[0],q:q[1],opts:q[2],ans:q[3],expl:q[4]})).filter(q=>sc==="*"||q.pid===sc);
+  pool=shuffle(pool).slice(0, sc==="*"?Math.min(15,pool.length):pool.length);
+  pool=pool.map(it=>{ const order=shuffle(it.opts.map((_,i)=>i)); return {...it,opts:order.map(i=>it.opts[i]),ans:order.indexOf(it.ans)}; });
+  const label=sc==="*"?"All parts":("Part "+(PARTS.findIndex(p=>p.id===sc)+1)+" · "+PARTS.find(p=>p.id===sc).t);
+  EXAM={label,items:pool,ans:Array(pool.length).fill(null),done:false}; drawExam();
+}
+function drawExam(){
+  const v=document.getElementById("v-quiz"); if(EXAM.done){drawResults();return;}
+  let h=`<div class="hero"><div class="eyebrow">In Progress</div><h2 class="glow">${esc(EXAM.label)}</h2><p>${EXAM.items.length} questions · 75% to pass.</p></div>`;
+  EXAM.items.forEach((it,i)=>{ const pt=PARTS.find(p=>p.id===it.pid);
+    h+=`<div class="q"><div class="qn">Q${i+1} · ${esc(pt.t)}</div><div class="qt">${esc(it.q)}</div>`;
+    it.opts.forEach((o,oi)=>h+=`<button class="opt ${EXAM.ans[i]===oi?'sel':''}" onclick="pick(${i},${oi})">${esc(o)}</button>`);
+    h+=`</div>`; });
+  const ansd=EXAM.ans.filter(a=>a!==null).length;
+  h+=`<div class="rnav"><button class="btn" onclick="EXAM=null;renderQuiz()">Cancel</button><div class="sp"></div>
+      <span class="pill">${ansd}/${EXAM.items.length}</span><button class="btn pri" onclick="grade()">Submit</button></div>`;
+  v.innerHTML=h; icons();
+}
+function pick(i,oi){ EXAM.ans[i]=oi; const q=document.querySelectorAll(".q")[i]; if(q){q.querySelectorAll(".opt").forEach((o,k)=>o.classList.toggle("sel",k===oi));} }
+function grade(){
+  if(EXAM.ans.includes(null)&&!confirm("Some questions are unanswered — submit anyway?"))return;
+  let c=0;const byp={}; EXAM.items.forEach((it,i)=>{const ok=EXAM.ans[i]===it.ans;if(ok)c++;
+    const pt=PARTS.find(p=>p.id===it.pid).t;(byp[pt]=byp[pt]||{c:0,t:0}).t++;if(ok)byp[pt].c++;});
+  const pct=Math.round(100*c/EXAM.items.length);
+  EXAM.done=true;EXAM.c=c;EXAM.pct=pct;EXAM.byp=byp;
+  STATE.scores.push({label:EXAM.label,pct,at:Date.now()});save();drawResults();
+}
+function drawResults(){
+  const pass=EXAM.pct>=75;
+  let h=`<div class="hero"><div class="eyebrow">Result</div><h2 class="glow">${esc(EXAM.label)}</h2></div>
+    <div style="display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-bottom:22px">
+      <div class="scorebig glow" style="color:${pass?'var(--good)':'var(--warn)'}">${EXAM.pct}%</div>
+      <div><div style="font-size:18px;font-weight:800;color:${pass?'var(--good)':'var(--warn)'}">${pass?'Passed':'Keep going'}</div>
+      <div style="color:var(--mut);font-size:14px">${EXAM.c} / ${EXAM.items.length} correct · pass 75%</div></div></div>
+    <h4 style="margin:10px 0 8px">By part</h4>`;
+  Object.keys(EXAM.byp).forEach(k=>{const b=EXAM.byp[k],p=Math.round(100*b.c/b.t);
+    h+=`<div class="brk"><div class="bn">${esc(k)}</div><div class="bar"><i style="width:${p}%;background:${p>=75?'var(--good)':p>=50?'var(--warn)':'var(--bad)'}"></i></div><div class="bv">${b.c}/${b.t}</div></div>`;});
+  h+=`<h4 style="margin:24px 0 8px">Review</h4>`;
+  EXAM.items.forEach((it,i)=>{const ua=EXAM.ans[i];
+    h+=`<div class="q"><div class="qn">Q${i+1}</div><div class="qt">${esc(it.q)}</div>`;
+    it.opts.forEach((o,oi)=>{let cl="opt";if(oi===it.ans)cl+=" correct";else if(oi===ua)cl+=" wrong";h+=`<div class="${cl}">${esc(o)}</div>`;});
+    h+=`<div class="expl"><b>${ua===it.ans?'Correct. ':'Answer: '}</b>${esc(it.expl)}</div></div>`;});
+  h+=`<div class="rnav"><button class="btn pri" onclick="EXAM=null;renderQuiz()">Done</button><button class="btn" onclick="startQuiz()">Retake</button></div>`;
+  document.getElementById("v-quiz").innerHTML=h;window.scrollTo(0,0);icons();
+}
+
+function renderNotes(){
+  const notes=CH.filter(c=>STATE.notes[c.id]&&STATE.notes[c.id].trim());
+  let h=`<div class="hero"><div class="eyebrow">Your Workbook</div><h2 class="glow">Notes</h2>
+    <p>Everything you've jotted, in one place. Chapter notes save as you type in the reader.</p>
+    <div class="controls" style="margin-top:16px"><input class="searchin" id="nsearch" oninput="fnotes()" placeholder="Search notes…" style="min-width:240px">
+      <button class="btn sm" onclick="exportNotes()"><i data-lucide="download"></i> Export .md</button></div></div>
+    <div class="notebox" style="margin-top:0"><label><i data-lucide="sparkles"></i> Global scratchpad</label>
+      <textarea id="scratch" style="min-height:120px" placeholder="Cross-cutting thoughts, questions, TODOs…">${esc(STATE.notes._s||"")}</textarea></div>
+    <div id="nlist">`;
+  if(!notes.length)h+=`<div class="empty">No chapter notes yet — open any chapter and start writing.</div>`;
+  else notes.forEach(c=>h+=`<div class="notecard" data-x="${esc((c.title+" "+STATE.notes[c.id]).toLowerCase())}">
+    <div class="nh"><b>${esc(c.title)}</b><span class="src">${esc(c.part.t)} · CH ${c.gid}</span>
+    <button class="btn sm go" onclick="go('reader','${c.id}')">Open</button></div><div class="nb">${esc(STATE.notes[c.id])}</div></div>`);
+  h+=`</div>`+foot();
+  document.getElementById("v-notes").innerHTML=h;
+  document.getElementById("scratch").addEventListener("input",e=>{STATE.notes._s=e.target.value;save();}); icons();
+}
+function fnotes(){ const q=document.getElementById("nsearch").value.toLowerCase();
+  document.querySelectorAll("#nlist .notecard").forEach(n=>n.style.display=n.dataset.x.includes(q)?"":"none"); }
+function exportNotes(){
+  let md="# AI Engineering — Notes\n\n_"+new Date().toLocaleString()+" · "+USER+"_\n\n";
+  if(STATE.notes._s&&STATE.notes._s.trim())md+="## Scratchpad\n\n"+STATE.notes._s+"\n\n";
+  CH.forEach(c=>{if(STATE.notes[c.id]&&STATE.notes[c.id].trim())md+="## "+c.part.t+" — CH "+c.gid+": "+c.title+"\n\n"+STATE.notes[c.id]+"\n\n";});
+  const b=new Blob([md],{type:"text/markdown"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="ai-engineering-notes.md";a.click();
+}
+
+function renderArena(){
+  let h=`<div class="hero"><div class="eyebrow">Live Field</div><h2 class="glow">The Arena</h2>
+    <p>Curated Tier&#8209;1 AI sources — labs, research, leaderboards, and the analysts worth reading. Opens in new tabs; treat it as a living list.</p></div><div class="agrid">`;
+  ARENA.forEach(c=>{ h+=`<div class="acat" style="--ca:${c.color}"><h4><span class="sdot" style="color:${c.color};width:9px;height:9px;border-radius:50%;display:inline-block"></span>${esc(c.cat)}</h4><p class="cd">${esc(c.desc)}</p>`;
+    c.links.forEach(l=>h+=`<a class="src" href="${l[2]}" target="_blank" rel="noopener noreferrer"><span class="sdot" style="color:${c.color};width:8px;height:8px;border-radius:50%;display:inline-block"></span><span style="min-width:0"><b>${esc(l[0])}</b><small>${esc(l[1])}</small></span><span class="ext"><i data-lucide="external-link"></i></span></a>`);
+    h+=`</div>`; });
+  h+=`</div>`+foot();
+  document.getElementById("v-arena").innerHTML=h; icons();
+}
+
+function renderDash(){
+  const done=CH.filter(chapDone).length,pct=Math.round(100*done/CH.length);
+  const learned=CH.reduce((n,c)=>n+chapLearned(c),0), total=CH.reduce((n,c)=>n+c.ideas.length,0);
+  const known=Object.keys(STATE.known).filter(k=>STATE.known[k]).length;
+  const avg=STATE.scores.length?Math.round(STATE.scores.reduce((a,s)=>a+s.pct,0)/STATE.scores.length):0;
+  let h=`<div class="hero"><div class="eyebrow">${esc(USER)} · Dashboard</div><h2 class="glow">Progress</h2><p>Tracked privately on this device.</p></div>
+    <div class="dgrid">
+      <div class="dcard"><div class="dv">${pct}%</div><div class="dl">Chapters mastered · ${done}/70</div></div>
+      <div class="dcard"><div class="dv">${learned}/${total}</div><div class="dl">Lessons learned</div></div>
+      <div class="dcard"><div class="dv">${known}</div><div class="dl">Cards known · of ${CARDS.length}</div></div>
+      <div class="dcard"><div class="dv">${avg}%</div><div class="dl">Avg score · ${STATE.scores.length} taken</div></div></div>
+    <h4 style="margin:8px 0 6px">By part</h4>`;
+  PARTS.forEach((p,i)=>{const pr=partPct(p.id);
+    h+=`<div class="prow"><div class="pno" style="background:linear-gradient(135deg,${p.a},${p.b})">${i+1}</div>
+      <div class="pname">${esc(p.t)}</div><div class="bar" style="width:160px"><i style="width:${pr.pct}%;background:linear-gradient(90deg,${p.a},${p.b})"></i></div>
+      <div class="pct">${pr.d}/${pr.t}</div></div>`;});
+  if(STATE.scores.length){h+=`<h4 style="margin:24px 0 6px">Score history</h4>`;
+    STATE.scores.slice().reverse().slice(0,12).forEach(s=>h+=`<div class="brk"><div class="bn">${esc(s.label)} <span style="color:var(--dim);font-size:11px">· ${new Date(s.at).toLocaleDateString()}</span></div><div class="bar"><i style="width:${s.pct}%;background:${s.pct>=75?'var(--good)':'var(--warn)'}"></i></div><div class="bv">${s.pct}%</div></div>`);}
+  h+=foot();
+  document.getElementById("v-dash").innerHTML=h; icons();
+}
+
+function foot(){ return `<div class="foot">AI Engineering · Neon Edition — a unified study app over the full 7-part, 70-chapter map. Each lesson expands to a full explanation you can mark learned. Educational synthesis of current practice — verify fast-moving specifics against primary sources in The Arena.</div>`; }
+
+(function(){
+  applyTheme();
+  document.getElementById("gtheme").onclick=toggleTheme;
+  const enter=()=>{ USER=document.getElementById("lname").value.trim()||"Guest"; lsSet("aieng_user",USER); loadState();
+    document.getElementById("gate").style.display="none"; document.getElementById("app").style.display="block"; buildChrome(); go("library"); };
+  document.getElementById("enter").onclick=enter;
+  document.getElementById("lname").addEventListener("keydown",e=>{if(e.key==="Enter")enter();});
+  const saved=lsGet("aieng_user"); if(saved){ document.getElementById("lname").value=saved; }
+  icons();
+})();
+</script>
+</body>
+</html>

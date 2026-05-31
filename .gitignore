@@ -1,0 +1,4 @@
+node_modules/
+artifacts/ai-school/dist/
+*.log
+.DS_Store

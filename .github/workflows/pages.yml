@@ -1,0 +1,84 @@
+name: ai-school-pages
+
+# Builds artifacts/ai-school (a fully static site generated from
+# docs/AI_LEARNING_SYSTEM/) and publishes it to GitHub Pages.
+#
+# Why this exists: ai-school is static HTML/CSS. It does not need a
+# container, a long-running server, or any external host credential.
+# GitHub Pages serves it for free using the workflow's built-in
+# GITHUB_TOKEN -- no Railway/Render token or repo secret required.
+#
+# `configure-pages` with `enablement: true` turns Pages on via the API
+# the first time this runs, so no manual dashboard toggle is needed
+# (provided Actions are allowed to manage Pages for the repo).
+#
+# Project Pages are served from https://<owner>.github.io/<repo>/, a
+# sub-path. build.mjs emits root-absolute links (/styles.css,
+# /chapters/..). The "Rebase asset paths" step rewrites those to the
+# repo sub-path so links and styles resolve correctly.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "artifacts/ai-school/**"
+      - "docs/AI_LEARNING_SYSTEM/**"
+      - ".github/workflows/ai-school-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; newer pushes supersede in-flight runs.
+concurrency:
+  group: ai-school-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build static site
+        working-directory: artifacts/ai-school
+        # build.mjs is base-path aware: BASE_PATH makes every internal link
+        # resolve under the project Pages sub-path (https://<owner>.github.io/<repo>/).
+        # It also writes dist/.nojekyll so Pages serves files verbatim.
+        env:
+          BASE_PATH: "/${{ github.event.repository.name }}"
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+          test -f dist/index.html
+          test -f dist/ai-engineering/index.html
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: artifacts/ai-school/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

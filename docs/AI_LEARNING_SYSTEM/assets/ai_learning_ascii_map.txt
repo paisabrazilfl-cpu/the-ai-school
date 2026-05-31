@@ -1,0 +1,235 @@
+================================================================================
+                       AI LEARNING SYSTEM - MASTER MAP
+                          (printable poster format)
+              WEB VERIFICATION NOT AVAILABLE IN THIS RUN.
+================================================================================
+
+AI_LEARNING_SYSTEM
+|
++-- 1. FOUNDATION
+|   |
+|   +-- 1.1 Mental Models
+|   |   +-- What an LLM is (next-token predictor, not oracle)
+|   |   +-- Context window vs memory
+|   |   +-- Tokens, cost, latency tradeoffs
+|   |   +-- Determinism vs sampling (temperature, top_p)
+|   |   +-- Tool use / function calling concept
+|   |   +-- Agents vs single-shot prompts
+|   |   +-- Multimodal inputs (text / image / audio / video)
+|   |
+|   +-- 1.2 Capability Map
+|   |   +-- Generation (text, code, image, audio, video)
+|   |   +-- Transformation (summarize, translate, reformat)
+|   |   +-- Extraction (entities, structure, tables)
+|   |   +-- Reasoning (planning, decomposition, math-lite)
+|   |   +-- Retrieval-augmented (RAG, search, citations)
+|   |   +-- Autonomy (multi-step agents, tool chains)
+|   |
+|   +-- 1.3 Limits and Failure Modes
+|   |   +-- Hallucination (fabricated facts, fake citations)
+|   |   +-- Stale training data / knowledge cutoff
+|   |   +-- Numeric and unit errors
+|   |   +-- Overconfidence
+|   |   +-- Prompt injection / data exfiltration
+|   |   +-- Bias and policy drift
+|   |   +-- Silent truncation (context overflow)
+|   |
+|   +-- 1.4 Safety and Ethics
+|   |   +-- PII handling
+|   |   +-- IP and licensing of generated assets
+|   |   +-- Disclosure (when AI was used)
+|   |   +-- Red-team mindset before shipping
+|   |   +-- Reasoning summary only (never raw chain-of-thought)
+|   |
+|   +-- 1.5 Vocabulary
+|       +-- prompt / system prompt / role
+|       +-- context / memory / cache
+|       +-- tool / function / MCP server
+|       +-- agent / loop / planner / executor
+|       +-- evaluation / eval set / regression
+|
++-- 2. PROMPTING
+|   |
+|   +-- 2.1 Universal Prompt Skeleton
+|   |   +-- ROLE
+|   |   +-- OBJECTIVE
+|   |   +-- CONTEXT
+|   |   +-- CONSTRAINTS
+|   |   +-- OUTPUT
+|   |
+|   +-- 2.2 Specialized Formulas
+|   |   +-- Research prompt
+|   |   +-- Coding-agent prompt
+|   |   +-- Debug prompt
+|   |   +-- Refactor prompt
+|   |   +-- Test-generation prompt
+|   |   +-- Image prompt
+|   |   +-- Video prompt
+|   |   +-- Voice prompt
+|   |   +-- Music prompt
+|   |   +-- Business plan prompt
+|   |   +-- GTM plan prompt
+|   |   +-- Decision matrix prompt
+|   |   +-- Risk matrix prompt
+|   |   +-- Source hierarchy prompt
+|   |   +-- Anti-hallucination prompt
+|   |
+|   +-- 2.3 Techniques
+|   |   +-- Few-shot examples
+|   |   +-- Step-by-step decomposition (ask for plan, not raw CoT)
+|   |   +-- Reasoning summary requests
+|   |   +-- Self-critique / second pass
+|   |   +-- Structured output (JSON, tables, schemas)
+|   |   +-- Negative constraints ("do not include...")
+|   |   +-- Refusal triggers ("say UNKNOWN when unsure")
+|   |
+|   +-- 2.4 Refinement Commands
+|   |   +-- shorten / lengthen
+|   |   +-- harden (cite sources)
+|   |   +-- soften (tone)
+|   |   +-- compress to N words
+|   |   +-- convert to table / JSON / bullets
+|   |   +-- adversarial review
+|   |   +-- explain like operator-not-engineer
+|   |
+|   +-- 2.5 Anti-Patterns
+|       +-- Vague verbs ("make it better")
+|       +-- Mixed objectives in one prompt
+|       +-- No output spec
+|       +-- Requesting hidden chain-of-thought
+|       +-- Asking model to "be sure" instead of to verify
+|
++-- 3. PLATFORM_SKILL
+|   |
+|   +-- 3.1 Conversational Assistants
+|   |   +-- ChatGPT
+|   |   +-- Claude (claude.ai)
+|   |   +-- Gemini
+|   |   +-- Perplexity
+|   |   +-- Microsoft 365 Copilot
+|   |
+|   +-- 3.2 Coding Environments
+|   |   +-- Claude Code (CLI + web)
+|   |   +-- GitHub Copilot
+|   |   +-- Cursor
+|   |   +-- Windsurf
+|   |   +-- Replit AI
+|   |
+|   +-- 3.3 Creative Generation
+|   |   +-- Midjourney (image)
+|   |   +-- Runway (video)
+|   |   +-- ElevenLabs (voice)
+|   |
+|   +-- 3.4 Cross-Platform Skills
+|   |   +-- Shortcut / slash command literacy
+|   |   +-- File and context attachment
+|   |   +-- Session and history management
+|   |   +-- Cost and quota awareness
+|   |   +-- Model selection per task
+|   |
+|   +-- 3.5 Platform Selection Heuristics
+|       +-- "Where does the data live?" rule
+|       +-- "Who reviews the output?" rule
+|       +-- "What is the blast radius?" rule
+|
++-- 4. WORKFLOWS
+|   |
+|   +-- 4.1 Research Workflow
+|   |   +-- Define question
+|   |   +-- Source hierarchy (primary > secondary > model memory)
+|   |   +-- Triangulate across 2+ tools
+|   |   +-- Cite or mark UNKNOWN
+|   |   +-- Summarize with confidence levels
+|   |
+|   +-- 4.2 Build Workflow (coding)
+|   |   +-- Spec -> Plan -> Diff -> Test -> Review
+|   |   +-- Small reversible steps
+|   |   +-- Tests before refactor
+|   |   +-- Human review at merge
+|   |
+|   +-- 4.3 Creative Workflow
+|   |   +-- Brief -> Moodboard -> Draft -> Variant -> Polish
+|   |   +-- Negative prompts as guardrails
+|   |   +-- Rights and licensing check
+|   |
+|   +-- 4.4 Business Workflow
+|   |   +-- Problem statement
+|   |   +-- Decision matrix
+|   |   +-- Risk matrix
+|   |   +-- Plan + metrics
+|   |   +-- Review cadence
+|   |
+|   +-- 4.5 Automation Workflow
+|       +-- Identify repeatable task
+|       +-- Manual run with logging
+|       +-- Add eval / regression
+|       +-- Hand off to agent or hook
+|       +-- Monitor and rollback path
+|
++-- 5. OPERATOR_LAYER
+|   |
+|   +-- 5.1 Checklists
+|   |   +-- Pre-prompt
+|   |   +-- Post-output verification
+|   |   +-- Source discipline
+|   |   +-- Coding agent safety
+|   |   +-- Automation safety
+|   |   +-- Agent deployment
+|   |   +-- Image / video review
+|   |   +-- Anti-hallucination
+|   |   +-- Hand-off to human
+|   |
+|   +-- 5.2 Source Discipline
+|   |   +-- Primary > Secondary > Tertiary > Model memory
+|   |   +-- Date-stamp every claim
+|   |   +-- Tag verification status
+|   |
+|   +-- 5.3 Verification Tagging
+|   |   +-- VERIFIED_LOCAL
+|   |   +-- VERIFIED_DOCS
+|   |   +-- USER_PROVIDED_UNVERIFIED
+|   |   +-- CUSTOM_WORKFLOW
+|   |   +-- LIKELY_NATIVE_UNVERIFIED
+|   |   +-- UNKNOWN
+|   |   +-- DEPRECATED
+|   |
+|   +-- 5.4 Blast Radius Discipline
+|   |   +-- Read-only first
+|   |   +-- Dry-run mode
+|   |   +-- Sandboxed write
+|   |   +-- Production write with approval
+|   |
+|   +-- 5.5 Logging and Audit
+|       +-- Prompt log
+|       +-- Output log
+|       +-- Decision log (why this output was accepted)
+|
++-- 6. MASTERY
+    |
+    +-- 6.1 Personal Eval Set
+    |   +-- 10-20 prompts you re-run on new models
+    |   +-- Score: accuracy / format / cost / latency
+    |
+    +-- 6.2 Reusable Library
+    |   +-- Prompt cards (this kit)
+    |   +-- Command matrix (this kit)
+    |   +-- Checklists (this kit)
+    |   +-- Snippets, system prompts, role packs
+    |
+    +-- 6.3 Teaching Loop
+    |   +-- Run -> Reflect -> Tag -> Re-template
+    |   +-- Share with peers, capture failure cases
+    |
+    +-- 6.4 Continuous Updating
+    |   +-- Re-check platform docs quarterly
+    |   +-- Retire DEPRECATED entries
+    |   +-- Promote LIKELY_NATIVE_UNVERIFIED -> VERIFIED_DOCS once confirmed
+    |
+    +-- 6.5 Operator Identity
+        +-- "I drive the model, the model does not drive me."
+        +-- Default to skepticism, ship with verification.
+        +-- Reasoning summary, never hidden chain-of-thought.
+
+================================================================================
+                              END OF MAP
+================================================================================
