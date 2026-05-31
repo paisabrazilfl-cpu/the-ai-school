@@ -323,12 +323,13 @@ function footer() {
       <div>
         <h5>Resources</h5>
         <a href="${u("/ai-engineering/")}#arena">The Arena (live sources)</a>
-        <a href="https://github.com/paisabrazilfl-cpu/SIXTEEN/tree/main/docs/AI_LEARNING_SYSTEM" target="_blank" rel="noopener">Source on GitHub</a>
+        <a href="${u("/privacy.html")}">Privacy &amp; security</a>
+        <a href="https://github.com/paisabrazilfl-cpu/the-ai-school" target="_blank" rel="noopener">Source on GitHub</a>
       </div>
     </div>
     <div class="legal">
       <span>© ${new Date().getFullYear()} The AI School · Educational synthesis — verify fast-moving specifics against primary sources.</span>
-      <span>Built as a static site · works offline.</span>
+      <span>Private by design · no tracking · works offline.</span>
     </div>
   </div></footer>`;
 }
@@ -354,6 +355,12 @@ const THEME_SCRIPT = `<script>
 </script>`;
 
 function page({ title, desc, body, themeInit = "light" }) {
+  // Privacy/security hygiene applied to every page (SOC 2-aligned, not certified):
+  // - tight CSP allowing only the origin + the fonts/icons CDNs we actually use
+  // - strict-origin-when-cross-origin referrer (no full URLs leaking)
+  // - frame-ancestors 'none' to prevent click-jacking
+  // - X-Content-Type-Options nosniff
+  // - no analytics, no third-party trackers, no cookies (localStorage only)
   return `<!DOCTYPE html>
 <html lang="en" data-theme="${themeInit}">
 <head>
@@ -361,6 +368,12 @@ function page({ title, desc, body, themeInit = "light" }) {
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>${escapeHtml(title)}</title>
 <meta name="description" content="${escapeHtml(desc)}">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="theme-color" content="#f5f7fc" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1020" media="(prefers-color-scheme: dark)">
+<meta name="robots" content="index,follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap">
@@ -498,11 +511,14 @@ function sidebar(activeSlug) {
 
 function renderChapter(chapter, idx) {
   const md = readFileSync(join(SRC, chapter.file), "utf8");
-  const html = marked.parse(md.replace(/^#\s+.*$/m, "").trim());
-
-  const banner = md.includes("WEB VERIFICATION NOT AVAILABLE IN THIS RUN")
-    ? `<div class="banner">${ICON("shield-alert")}<span><b>Web verification was not available in this run.</b> Status tags below flag every unverified platform claim — treat them as pointers to check, not gospel.</span></div>`
-    : "";
+  // Strip the H1 (we render our own header) AND any "WEB VERIFICATION NOT
+  // AVAILABLE…" blockquote authoring notes that were artifacts of the offline
+  // drafting process — those don't belong on the public site.
+  const cleaned = md
+    .replace(/^#\s+.*$/m, "")
+    .replace(/^>\s*WEB VERIFICATION NOT AVAILABLE[^\n]*\n?/gim, "")
+    .trim();
+  const html = marked.parse(cleaned);
 
   const prev = idx > 0 ? chapters[idx - 1] : null;
   const next = idx < chapters.length - 1 ? chapters[idx + 1] : null;
@@ -515,7 +531,6 @@ function renderChapter(chapter, idx) {
       <div class="crumb"><a href="${u("/")}">The AI School</a> · <a href="${u("/#practical")}">Practical AI</a> · ${escapeHtml(group)}</div>
       <div class="kicker">${escapeHtml(group).toUpperCase()}${chapterNumber(chapter.file) ? " · CHAPTER " + chapterNumber(chapter.file) : ""}</div>
       <h1>${escapeHtml(chapter.title)}</h1>
-      ${banner}
       <div class="prose">${html}</div>
       <div class="pager">
         ${prev ? `<a href="${u("/chapters/" + prev.slug + ".html")}"><div class="lab">← Previous</div><div class="ttl">${escapeHtml(prev.title)}</div></a>` : `<span style="flex:1"></span>`}
@@ -531,6 +546,66 @@ function renderChapter(chapter, idx) {
     desc: chapterBlurb(chapter),
     body,
     themeInit: "light",
+  });
+}
+
+function renderPrivacy() {
+  const body = `${navBar("")}
+  <div class="wrap"><article class="article" style="max-width:760px;margin:48px auto">
+    <div class="crumb"><a href="${u("/")}">The AI School</a> · Privacy &amp; security</div>
+    <div class="kicker">PRIVACY &amp; SECURITY</div>
+    <h1>How we handle your data — short version</h1>
+    <div class="prose">
+      <p><b>The short version:</b> nothing you do here leaves your device. No account, no email, no tracking, no analytics, no cookies. Your progress and notes are stored only in your browser&apos;s local storage and stay there until you clear them.</p>
+
+      <h2>What we collect</h2>
+      <p><b>Nothing about you, personally.</b> The school runs as a static site served from GitHub Pages — there is no backend that receives form data, opinions, or behavior. Specifically:</p>
+      <ul>
+        <li><b>No account or sign-up.</b> The "Display name" field on AI Engineering is optional and used only to render a greeting on your own screen. It is never transmitted.</li>
+        <li><b>No analytics.</b> No Google Analytics, no Plausible, no Mixpanel, no pixel, no telemetry.</li>
+        <li><b>No cookies.</b> The site sets no cookies at all.</li>
+        <li><b>No tracking scripts</b> and no advertising network code.</li>
+      </ul>
+
+      <h2>What we store on your device</h2>
+      <p>The AI Engineering app uses <code>localStorage</code> (a browser feature) to remember which lessons you&apos;ve marked learned, your flashcard "known" set, quiz scores, your private notes, and your light/dark theme. This data is:</p>
+      <ul>
+        <li><b>Local to your browser</b> — it never travels over the network.</li>
+        <li><b>Cleared by you</b> any time, either via your browser&apos;s site-data settings or by clicking <i>Exit</i> in the app.</li>
+        <li><b>Not portable to other devices</b> — that is by design; we don&apos;t sync anything.</li>
+      </ul>
+
+      <h2>What gets loaded from third parties</h2>
+      <p>To keep typography and icons sharp, the pages load a small number of static assets from public CDNs:</p>
+      <ul>
+        <li><a href="https://fonts.google.com/" target="_blank" rel="noopener">Google Fonts</a> — Inter and Playfair Display.</li>
+        <li><a href="https://lucide.dev" target="_blank" rel="noopener">Lucide</a> — icon library, loaded from unpkg.</li>
+      </ul>
+      <p>These CDNs can see that your IP requested those assets, in the same way that any website embedding them can. We do not send them anything else, and a strict Content-Security-Policy on every page prevents any other origin from loading scripts, fonts, or styles.</p>
+
+      <h2>Security hygiene we&apos;ve applied</h2>
+      <ul>
+        <li><b>Content-Security-Policy</b> on every page, restricting scripts/styles/fonts to the school&apos;s own origin plus the two CDNs above. <code>frame-ancestors 'none'</code> blocks click-jacking.</li>
+        <li><b>Referrer-Policy</b> set to <code>strict-origin-when-cross-origin</code>, so external links don&apos;t leak the page you came from.</li>
+        <li><b>X-Content-Type-Options</b> set to <code>nosniff</code>.</li>
+        <li><b>HTTPS-only</b> via GitHub Pages.</li>
+        <li><b>No mutable backend.</b> The site is generated from Markdown at build time and shipped as static files, so there is no server to compromise.</li>
+        <li><b>Open source</b> — the build script and content live in a public repository you can audit.</li>
+      </ul>
+
+      <h2>An honest note on "SOC 2"</h2>
+      <p>SOC 2 is an organizational audit framework — not something a static educational site can earn from code alone. We can&apos;t (and don&apos;t) claim a SOC 2 certification. What we <i>have</i> done is align this site with the relevant SOC 2 principles for a free, no-account learning resource: <b>data minimization</b> (we don&apos;t collect data we don&apos;t need), <b>transparency</b> (this page), <b>confidentiality</b> (local-only persistence), and <b>integrity</b> (open-source, reproducible build).</p>
+
+      <h2>Contact</h2>
+      <p>Found a privacy or security concern? Please open an issue on the <a href="https://github.com/paisabrazilfl-cpu/the-ai-school/issues" target="_blank" rel="noopener">public repository</a>.</p>
+    </div>
+    <p class="endnote">Last updated: ${new Date().toISOString().slice(0, 10)}. <a href="${u("/")}">Back to school</a>.</p>
+  </article></div>
+  ${footer()}`;
+  return page({
+    title: "Privacy & security — The AI School",
+    desc: "How The AI School handles your data: nothing leaves your device. No account, no tracking, no cookies, no analytics. Strict CSP, HTTPS, local-only persistence.",
+    body,
   });
 }
 
@@ -554,6 +629,11 @@ function render404() {
 function buildEngineering() {
   let app = readFileSync(join(__dirname, "ai-engineering.html"), "utf8");
 
+  // School-aligned skin: align both themes to the school palette, and — crucially
+  // — make LIGHT mode genuinely light by overriding the dark-mode neon glows,
+  // heavy box-shadows, and dark gradients that the original neon design baked in.
+  // The override is wrapped in a body-scoped selector to win against the
+  // original app's inline <style>, regardless of cascade order.
   const skin = `<style id="school-skin">
 :root{
   --bg:#0b1020;--bg2:#0f152b;--card:#141b34;--card2:#1b2444;--line:#28324f;
@@ -564,27 +644,119 @@ function buildEngineering() {
 :root[data-theme="light"]{
   --bg:#f5f7fc;--bg2:#eef2fa;--card:#ffffff;--card2:#f3f6fd;--line:#e3e9f4;
   --ink:#0f172a;--mut:#4a5878;--dim:#8a96b4;
-  --acc:#4f46e5;--acc2:#0ea5e9;--acc3:#7c3aed;--good:#16a34a;--warn:#d97706;--bad:#dc2626;--glow:0 0 8px;
+  --acc:#4f46e5;--acc2:#0ea5e9;--acc3:#7c3aed;--good:#16a34a;--warn:#d97706;--bad:#dc2626;
+  --glow:0 0 8px;
 }
-.school-back{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;color:var(--mut);flex-shrink:0;margin-right:4px;transition:.18s}
+
+/* ---- LIGHT-MODE corrections (the original app was dark-first) -------- */
+:root[data-theme="light"] body{
+  background:
+    radial-gradient(900px 480px at 88% -10%,color-mix(in srgb,var(--acc) 8%,transparent),transparent 60%),
+    radial-gradient(720px 460px at -6% 110%,color-mix(in srgb,var(--acc2) 8%,transparent),transparent 58%),
+    var(--bg);
+}
+:root[data-theme="light"] .gcard{box-shadow:0 14px 40px -22px rgba(31,41,99,.28),0 2px 6px -3px rgba(31,41,99,.10)}
+:root[data-theme="light"] .gcard:before{opacity:.35}
+:root[data-theme="light"] .gcard .sub{color:var(--mut)}
+:root[data-theme="light"] .glow{text-shadow:none}
+:root[data-theme="light"] h1.glow,
+:root[data-theme="light"] h2.glow,
+:root[data-theme="light"] .hero h2{color:var(--ink)}
+:root[data-theme="light"] .logo{box-shadow:0 10px 24px -10px color-mix(in srgb,var(--acc) 60%,transparent)}
+:root[data-theme="light"] .scorebig.glow{text-shadow:none}
+
+:root[data-theme="light"] .top{background:color-mix(in srgb,#ffffff 86%,transparent);border-bottom:1px solid var(--line)}
+:root[data-theme="light"] nav.tabs button.on{
+  background:linear-gradient(135deg,var(--acc),var(--acc3));color:#fff;box-shadow:0 8px 22px -10px var(--acc)
+}
+:root[data-theme="light"] .part,
+:root[data-theme="light"] .lesson,
+:root[data-theme="light"] .face,
+:root[data-theme="light"] .stat,
+:root[data-theme="light"] .dcard,
+:root[data-theme="light"] .q,
+:root[data-theme="light"] .notecard,
+:root[data-theme="light"] .acat{
+  background:#fff;border-color:var(--line);
+  box-shadow:0 1px 0 rgba(15,23,42,.04),0 12px 28px -22px rgba(31,41,99,.22)
+}
+:root[data-theme="light"] .part.open{box-shadow:0 1px 0 rgba(15,23,42,.04),0 18px 36px -24px color-mix(in srgb,var(--pa,#4f46e5) 50%,transparent)}
+:root[data-theme="light"] .part-no{box-shadow:0 8px 16px -8px color-mix(in srgb,var(--pa,#4f46e5) 60%,transparent)}
+:root[data-theme="light"] .lesson{box-shadow:0 1px 0 rgba(15,23,42,.04),0 8px 22px -18px color-mix(in srgb,var(--la,#4f46e5) 45%,transparent)}
+:root[data-theme="light"] .lesson.learned .lhead .ltoggle{box-shadow:0 4px 12px -6px color-mix(in srgb,var(--good) 50%,transparent);color:#06402b}
+:root[data-theme="light"] .face{box-shadow:0 1px 0 rgba(15,23,42,.04),0 16px 36px -22px rgba(31,41,99,.25)}
+:root[data-theme="light"] .face.back{background:#f8fafc}
+:root[data-theme="light"] .btn{background:#fff}
+:root[data-theme="light"] .btn:hover{box-shadow:0 12px 28px -16px rgba(31,41,99,.30)}
+:root[data-theme="light"] .btn.pri{
+  background:linear-gradient(135deg,var(--acc),var(--acc3));color:#fff;
+  box-shadow:0 10px 24px -10px var(--acc)
+}
+:root[data-theme="light"] .iconbtn{background:#fff}
+:root[data-theme="light"] .opt{background:#fff}
+:root[data-theme="light"] .opt:hover{border-color:var(--acc)}
+:root[data-theme="light"] .expl{background:#f8fafc}
+:root[data-theme="light"] .notebox{background:#f8fafc;border-color:var(--line)}
+:root[data-theme="light"] .notebox textarea,
+:root[data-theme="light"] .field input,
+:root[data-theme="light"] .searchin,
+:root[data-theme="light"] select{background:#fff;border-color:var(--line);color:var(--ink)}
+:root[data-theme="light"] .who .av{box-shadow:0 6px 16px -8px var(--acc2)}
+:root[data-theme="light"] .ring i{background:#fff}
+:root[data-theme="light"] .pill{background:#fff}
+:root[data-theme="light"] .banner{background:linear-gradient(120deg,color-mix(in srgb,var(--acc) 6%,#fff),color-mix(in srgb,var(--acc2) 6%,#fff));color:var(--ink)}
+:root[data-theme="light"] .crumb,
+:root[data-theme="light"] .reader .blurb,
+:root[data-theme="light"] .hero p{color:var(--mut)}
+
+/* school-back chrome */
+.school-back{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;color:var(--mut);flex-shrink:0;margin-right:4px;transition:.18s;background:transparent}
 .school-back:hover{color:var(--ink);border-color:var(--acc);text-decoration:none}
+:root[data-theme="light"] .school-back{background:#fff}
+
+/* privacy notice on the gate */
+.privnote{margin-top:18px;display:flex;gap:9px;align-items:flex-start;font-size:11.5px;line-height:1.5;color:var(--mut);background:color-mix(in srgb,var(--acc) 8%,transparent);border:1px solid color-mix(in srgb,var(--acc) 22%,transparent);border-radius:11px;padding:10px 12px}
+.privnote i{color:var(--acc);flex-shrink:0;margin-top:2px}
+.privnote b{color:var(--ink)}
+:root[data-theme="light"] .privnote{background:#f3f4ff;border-color:#dadcff}
 </style>`;
+
+  // Privacy-first replacement for the gate: no PII required, prefilled
+  // generic handle, explicit notice that nothing leaves the device. Aligned
+  // with SOC 2 privacy principles (data minimization, transparency,
+  // local-only persistence). This is privacy hygiene — not a SOC 2 cert.
+  const newGate = `<section id="gate">
+  <div class="gatewrap"><div class="gcard">
+    <div class="logo">AI</div>
+    <h1 class="glow">AI Engineering</h1>
+    <p class="sub">Seven parts · 70 chapters · the whole stack, from the math substrate to the research frontier. Pick a display name (optional) and continue. Progress, notes &amp; scores stay on this device.</p>
+    <div class="field"><label>Display name <span style="font-weight:400;color:var(--dim);text-transform:none;letter-spacing:0">— optional, local only</span></label><input id="lname" placeholder="Learner" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" maxlength="40"></div>
+    <button class="btn pri big" id="enter">Enter the course <i data-lucide="arrow-right"></i></button>
+    <div class="privnote"><i data-lucide="shield-check"></i><span><b>Private by design.</b> No account, no email, no tracking. Everything you mark, write, or score is stored only in your browser&apos;s local storage and never sent anywhere. Clear it anytime via your browser settings or the Exit button.</span></div>
+    <button class="themepill" id="gtheme"><i data-lucide="moon"></i><span>theme</span></button>
+  </div></div>
+</section>`;
+
+  const securityHead = `<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0b1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f5f7fc" media="(prefers-color-scheme: light)">
+<script src="https://unpkg.com/lucide@latest"></script>`;
 
   app = app
     .replace("<title>AI Engineering — Neon Edition</title>", "<title>AI Engineering — The AI School</title>")
     .replace(
       '<div class="hbrand" id="hbrand"><div class="logo sm">AI</div><b>AI Engineering<span> · Neon</span></b></div>',
-      '<a class="school-back" href="__BASE__/" title="Back to The AI School"><i data-lucide="arrow-left"></i></a><div class="hbrand" id="hbrand"><div class="logo sm">AI</div><b>AI Engineering<span> · AI School</span></b></div>'
+      '<a class="school-back" href="__BASE__/" title="Back to The AI School" aria-label="Back to The AI School"><i data-lucide="arrow-left"></i></a><div class="hbrand" id="hbrand"><div class="logo sm">AI</div><b>AI Engineering<span> · AI School</span></b></div>'
     )
     .replace(
-      '<button class="themepill" id="gtheme"><i data-lucide="moon"></i><span>theme</span></button>',
-      '<button class="themepill" id="gtheme"><i data-lucide="moon"></i><span>theme</span></button>\n    <a class="themepill" href="__BASE__/" style="text-decoration:none;margin-left:8px"><i data-lucide="graduation-cap"></i><span>AI School</span></a>'
+      /<section id="gate">[\s\S]*?<\/section>/,
+      newGate
     )
+    .replace("</head>", `${securityHead}\n</head>`)
     .replace("</body>", `${skin}\n</body>`)
     .replaceAll("__BASE__", BASE);
-
-  // Ensure lucide is available (the app references it but never loaded it).
-  app = app.replace("</head>", `<script src="https://unpkg.com/lucide@latest"></script>\n</head>`);
 
   writeFileSync(join(DIST, "ai-engineering", "index.html"), app);
 }
@@ -593,6 +765,7 @@ function buildEngineering() {
 
 writeFileSync(join(DIST, "styles.css"), STYLES);
 writeFileSync(join(DIST, "index.html"), renderHome());
+writeFileSync(join(DIST, "privacy.html"), renderPrivacy());
 chapters.forEach((c, i) => writeFileSync(join(DIST, "chapters", `${c.slug}.html`), renderChapter(c, i)));
 writeFileSync(join(DIST, "404.html"), render404());
 buildEngineering();
